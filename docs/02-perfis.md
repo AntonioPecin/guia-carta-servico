@@ -42,3 +42,13 @@ Nenhuma policy amplia onde a pessoa age.
 - **Delegação temporária** de perfil por ausência (consolidado no mesmo documento).
 - **Revisão periódica obrigatória** aberta pela CGE (PBI #1368492).
 - **Copiar carta:** só o Administrador.
+
+## O que o sistema mostra (homologação, 12/11/2026)
+
+| Quadro acima | Sistema |
+|---|---|
+| Coordenador não edita carta publicada | Edita a versão **Rascunho** da carta publicada (menu de versões no topo); o envio continua com o Gerente |
+| Coordenador pré-visualiza | Ainda não existe; o Kauã vai fazer. No guia: `previsto: true` |
+| Coordenador vê o motivo da devolução | Previsto, não está no sistema |
+
+Detalhes da navegação: nota do vault `10-conhecimento/cms-carta-servico/navegar-no-cms-da-carta.md`.

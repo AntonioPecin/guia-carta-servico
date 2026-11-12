@@ -10,8 +10,10 @@ export type Acao = {
   titulo: string;
   objetivo: string;
   passos: Passo[];
-  /** aviso curto mostrado antes dos passos (ex.: funcionalidade prevista) */
+  /** aviso curto mostrado antes dos passos */
   aviso?: string;
+  /** funcionalidade ainda em desenvolvimento no CMS: aparece com selo e sem prints. Tire quando for entregue */
+  previsto?: boolean;
 };
 
 export type Perfil = {

@@ -26,6 +26,32 @@ npm run dev        # http://localhost:3000
 | Trocar um print | `public/prints/<perfil>/` e o campo `print` do passo |
 | Mudar o visual | `app/app.css` (só tokens `--ds-*`) |
 
+## Como editar e ampliar
+
+Tudo o que o guia mostra vem de `conteudo/<perfil>.ts`. Cada ação é um bloco:
+
+```ts
+{
+  id: "pre-visualizar",              // vira a âncora #pre-visualizar
+  titulo: "Pré-visualizar a carta",
+  objetivo: "Ver a carta como o cidadão vai ver.",
+  previsto: true,                    // função ainda em desenvolvimento no CMS: selo, sem prints
+  aviso: "Texto de atenção opcional.",
+  passos: [
+    { titulo: "Abra a carta", texto: "…", print: "previsualizar-1.png" },
+  ],
+}
+```
+
+| Situação | O que fazer |
+|---|---|
+| A X-VIA entregou uma função prevista | Tire `previsto: true`, ponha o nome do print nos passos, inclua a tela no `ROTEIRO` de `scripts/capturar.mjs` e rode `npm run prints` |
+| A tela do CMS mudou | Rode `npm run prints` de novo: todos os prints são refeitos |
+| Ação nova | Copie um bloco, mude `id`, textos e prints |
+| Perfil novo | Crie `conteudo/<perfil>.ts`, importe em `conteudo/perfis.ts` com `situacao: "pronto"` e acrescente as telas dele no `ROTEIRO` |
+
+Print que ainda não existe aparece como "Print desta etapa em preparação" (só na tela, não no PDF).
+
 ## Prints do CMS
 
 O script entra no CMS de homologação com a sua sessão e salva PNG em 2x.

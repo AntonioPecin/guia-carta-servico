@@ -87,6 +87,9 @@
     display: block;
     margin-block: var(--ds-spacing-16);
   }
+  .muted {
+    color: var(--ds-color-text-muted);
+  }
   .sem-print {
     color: var(--ds-color-text-muted);
     font-style: italic;

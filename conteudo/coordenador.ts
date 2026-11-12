@@ -1,23 +1,23 @@
 import type { Perfil } from "./tipos";
 
-// Rascunho a partir do quadro de perfis do pacote TO BE da carta (docs/02-perfis.md).
-// Os passos e os prints são conferidos navegando no CMS de homologação (docs/01-plano.md, fase 2).
+// Conferido no CMS de homologação em 12/11/2026, com o perfil Coordenador (órgão SAD).
+// Prints: scripts/capturar.mjs (mesmo nome de arquivo do campo `print`).
 export const coordenador: Perfil = {
   id: "coordenador",
   nome: "Coordenador",
   resumo: "Escreve e corrige as cartas de serviço do órgão. Quem envia para aprovação é o Gerente.",
   situacao: "pronto",
   pode: [
-    "Ver e pré-visualizar as cartas do órgão",
-    "Criar uma carta e editar o rascunho",
-    "Excluir um rascunho que nunca foi publicado",
-    "Ver o histórico de alterações das cartas",
+    "Ver as cartas dos órgãos em que atua",
+    "Criar uma carta nova e salvar",
+    "Propor mudança numa carta publicada, pela versão Rascunho",
+    "Ver o histórico da carta",
   ],
   naoPode: [
     "Enviar a carta para aprovação (é o Gerente)",
-    "Editar uma carta já publicada (é o Gerente, abrindo uma nova versão)",
     "Aprovar ou devolver uma carta (é o Aprovador Central, da CGE)",
-    "Cadastrar unidades, órgãos ou categorias",
+    "Excluir uma carta publicada",
+    "Ver cartas de outros órgãos",
   ],
   acoes: [
     {
@@ -26,8 +26,12 @@ export const coordenador: Perfil = {
       objetivo: "Abrir o gerenciador de cartas com o seu usuário.",
       passos: [
         { titulo: "Abra o endereço do CMS", texto: "No navegador, acesse o endereço do CMS que a SETDIG enviou.", print: "" },
-        { titulo: "Entre com o seu usuário", texto: "Informe o seu acesso. Na primeira vez, a SETDIG libera o seu perfil.", print: "" },
-        { titulo: "Confira a tela inicial", texto: "Depois de entrar, o menu à esquerda mostra as áreas que o seu perfil pode usar.", print: "" },
+        { titulo: "Clique em Entrar com SSO", texto: "Entre com o seu acesso. Na primeira vez, a SETDIG libera o seu perfil e o seu órgão.", print: "entrar-1-login.png" },
+        {
+          titulo: "Conheça o menu",
+          texto: "À esquerda fica a área Carta de Serviço. Você vai usar mais o item Serviços, que lista as cartas do seu órgão.",
+          print: "entrar-2-menu.png",
+        },
       ],
     },
     {
@@ -35,92 +39,103 @@ export const coordenador: Perfil = {
       titulo: "Encontrar uma carta",
       objetivo: "Achar a carta do seu órgão na lista.",
       passos: [
-        { titulo: "Abra a lista de cartas", texto: "No menu, clique em Serviços. Aparecem as cartas dos órgãos em que você atua.", print: "" },
-        { titulo: "Busque pelo nome", texto: "Digite parte do nome do serviço na busca.", print: "" },
-        { titulo: "Abra a carta", texto: "Clique na linha da carta para ver os campos.", print: "" },
+        {
+          titulo: "Abra Serviços",
+          texto: "A lista mostra nome, categoria, órgão e situação (Ativo ou Inativo) de cada carta do seu órgão.",
+          print: "encontrar-1-lista.png",
+        },
+        { titulo: "Busque pelo nome", texto: "Clique na lupa, no alto da lista, e digite parte do nome do serviço.", print: "encontrar-2-busca.png" },
+        { titulo: "Abra a carta", texto: "Clique na linha da carta. Ela abre na aba Descrição do Serviço.", print: "encontrar-3-carta.png" },
       ],
     },
     {
       id: "criar",
       titulo: "Criar uma carta",
-      objetivo: "Cadastrar um serviço novo e deixá-lo salvo como rascunho.",
+      objetivo: "Cadastrar um serviço novo.",
       passos: [
-        { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão de criar (+).", print: "" },
+        { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão + no alto da lista.", print: "" },
         {
-          titulo: "Aba Descrição do Serviço",
-          texto: "Preencha nome do serviço (3 a 5 palavras, começando por verbo), categoria e subcategoria, órgão, o que é o serviço, documentos necessários e quem pode utilizar. Saiba mais, nome popular e palavras-chave são opcionais.",
-          print: "",
+          titulo: "Aba 1 — Descrição do Serviço",
+          texto: "Preencha nome do serviço (3 a 5 palavras, começando por verbo), categoria e subcategoria, órgão, o que é o serviço, documentos necessários e quem pode utilizar. Público específico, nome popular, saiba mais e palavras-chave ajudam o cidadão a achar o serviço.",
+          print: "criar-1-descricao.png",
         },
         {
-          titulo: "Aba Etapa do Serviço",
+          titulo: "Aba 2 — Etapa do Serviço",
           texto: "Escolha o canal de prestação (presencial, online ou os dois) e escreva cada etapa na ordem em que a pessoa faz.",
-          print: "",
+          print: "criar-2-etapas.png",
         },
         {
-          titulo: "Aba Detalhes do Serviço",
+          titulo: "Aba 3 — Detalhes do Serviço",
           texto: "Informe o prazo de atendimento, o tipo de custo (gratuito ou pago), os locais de atendimento e o link do serviço, se houver.",
+          print: "criar-3-detalhes.png",
+        },
+        {
+          titulo: "Salve",
+          texto: "Clique no botão de confirmar (✓), no alto à direita. Os campos com asterisco são obrigatórios. Depois, avise o Gerente para enviar a carta para aprovação.",
           print: "",
         },
-        { titulo: "Salve o rascunho", texto: "Clique em salvar. A carta fica como rascunho até o Gerente enviar para aprovação. Os campos com asterisco são obrigatórios.", print: "" },
       ],
     },
     {
-      id: "editar",
-      titulo: "Editar o rascunho",
-      objetivo: "Corrigir uma carta que ainda não foi publicada.",
+      id: "mudar-publicada",
+      titulo: "Mudar uma carta publicada",
+      objetivo: "Propor correção numa carta que já está no portal, sem tirar a versão atual do ar.",
+      aviso: "A carta publicada não se edita direto. A mudança é feita na versão Rascunho e só vai ao portal depois de aprovada.",
       passos: [
-        { titulo: "Abra o rascunho", texto: "Encontre a carta e abra. Só existe um rascunho por carta: todos editam o mesmo.", print: "" },
-        { titulo: "Altere os campos", texto: "Mude o que precisar. Use frases curtas e palavras do dia a dia.", print: "" },
-        { titulo: "Salve", texto: "Clique em salvar. A mudança fica registrada no histórico.", print: "" },
+        {
+          titulo: "Veja o aviso no alto da carta",
+          texto: "Carta publicada mostra \"Visível no portal — você está na versão principal\".",
+          print: "mudar-1-aviso.png",
+        },
+        {
+          titulo: "Abra o menu de versões",
+          texto: "Clique no nome da versão, ao lado de Serviços, no alto da página. Escolha Rascunho. Se não existir, use Criar Versão.",
+          print: "mudar-2-versoes.png",
+        },
+        {
+          titulo: "Edite o rascunho e salve",
+          texto: "Mude os campos e salve (✓). Enquanto o rascunho estiver igual à carta publicada, o CMS avisa que não há o que o aprovador analisar.",
+          print: "mudar-3-rascunho.png",
+        },
+        { titulo: "Avise o Gerente", texto: "O Gerente envia o rascunho para o Aprovador Central.", print: "" },
       ],
     },
     {
       id: "pre-visualizar",
       titulo: "Pré-visualizar a carta",
       objetivo: "Ver a carta como o cidadão vai ver no portal, antes de pedir o envio.",
+      previsto: true,
       passos: [
-        { titulo: "Abra a carta", texto: "Abra o rascunho que você quer conferir.", print: "" },
-        { titulo: "Pré-visualize", texto: "Clique em pré-visualizar e confira o texto como aparece no portal.", print: "" },
-      ],
-    },
-    {
-      id: "pedir-envio",
-      titulo: "Pedir o envio ao Gerente",
-      objetivo: "Fazer a carta seguir para aprovação.",
-      aviso: "O Coordenador não envia a carta. Avise o Gerente do seu órgão quando o rascunho estiver pronto.",
-      passos: [
-        { titulo: "Confira o rascunho", texto: "Pré-visualize e corrija o que faltar.", print: "" },
-        { titulo: "Avise o Gerente", texto: "Diga ao Gerente qual carta está pronta. Ele envia para o Aprovador Central.", print: "" },
+        { titulo: "Abra a carta", texto: "Abra a carta ou o rascunho que você quer conferir." },
+        { titulo: "Pré-visualize", texto: "Use a opção de pré-visualizar e confira o texto como aparece no portal." },
       ],
     },
     {
       id: "corrigir-devolvida",
       titulo: "Corrigir uma carta devolvida",
       objetivo: "Ajustar a carta que o Aprovador Central devolveu com apontamentos.",
-      aviso: "Ver o motivo da devolução direto na carta está previsto, mas ainda não está no sistema. Hoje o Gerente repassa os apontamentos.",
+      aviso: "Hoje o Gerente repassa os apontamentos ao Coordenador. Ver o motivo direto na carta está previsto.",
       passos: [
-        { titulo: "Abra a carta devolvida", texto: "A carta aparece como Pendente de correção.", print: "" },
+        { titulo: "Abra a carta devolvida", texto: "Abra a carta e a versão Rascunho.", print: "" },
         { titulo: "Corrija os campos apontados", texto: "Mude só o que foi pedido e salve.", print: "" },
         { titulo: "Avise o Gerente", texto: "O Gerente reenvia a carta para aprovação.", print: "" },
       ],
     },
     {
-      id: "excluir-rascunho",
-      titulo: "Excluir um rascunho",
-      objetivo: "Apagar uma carta que nunca foi publicada.",
-      aviso: "Carta já publicada não é excluída pelo Coordenador.",
-      passos: [
-        { titulo: "Abra o rascunho", texto: "Encontre a carta que nunca foi publicada.", print: "" },
-        { titulo: "Exclua", texto: "Use a opção de excluir e confirme.", print: "" },
-      ],
-    },
-    {
       id: "historico",
       titulo: "Ver o histórico",
-      objetivo: "Saber quem mudou o quê e quando.",
+      objetivo: "Saber quem mudou a carta e quando.",
       passos: [
-        { titulo: "Abra a carta", texto: "Encontre a carta e abra.", print: "" },
-        { titulo: "Abra a aba Histórico", texto: "Veja as aprovações e quem criou e atualizou a carta, com data e hora.", print: "" },
+        {
+          titulo: "Abra a aba Histórico",
+          texto: "É a aba 5 da carta. Mostra as aprovações e quem criou e atualizou a carta, com data e hora.",
+          print: "historico-1-aba.png",
+        },
+        {
+          titulo: "Use Revisões, na lateral direita",
+          texto: "Lista cada alteração salva. Em Comentários, você deixa um recado para quem cuida da carta.",
+          print: "",
+        },
       ],
     },
   ],
