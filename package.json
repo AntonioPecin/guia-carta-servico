@@ -7,7 +7,9 @@
     "build": "next build",
     "prints:login": "node scripts/capturar.mjs --login",
     "prints": "node scripts/capturar.mjs",
-    "deploy": "next build && vercel deploy out --prod --yes --project guia-carta-servico"
+    "pdf": "node scripts/pdf.mjs",
+    "video": "node scripts/video.mjs",
+    "deploy": "next build && node scripts/pdf.mjs && vercel deploy out --prod --yes --project guia-carta-servico"
   },
   "dependencies": {
     "@plataforma-xvia/ds-core": "0.14.4",

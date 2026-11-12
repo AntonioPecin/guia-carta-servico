@@ -1,6 +1,12 @@
 /* Só layout e composição. Cor, fonte, raio e espaço vêm dos tokens do DS. */
 @layer ds.primitives, ds.semantic, ds.theme, app;
 
+/* PDF (scripts/pdf.mjs usa estas margens; ele não imprime data nem endereço) */
+@page {
+  size: A4;
+  margin: 14mm 16mm;
+}
+
 @layer app {
   body {
     margin: 0;
@@ -95,22 +101,82 @@
     font-style: italic;
   }
 
+  .onde {
+    margin: var(--ds-spacing-8) 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-text-body-small-size);
+  }
+  .tela {
+    margin-top: var(--ds-spacing-8);
+  }
+  .video {
+    margin: var(--ds-spacing-24) 0;
+  }
+  .video video,
+  .video iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 0;
+    border-radius: var(--ds-radius-md);
+    background: var(--ds-color-surface-muted);
+  }
+  .video figcaption {
+    margin-top: var(--ds-spacing-8);
+    font-size: var(--ds-text-body-small-size);
+  }
+  .resumo {
+    margin-top: var(--ds-spacing-24);
+  }
+  .so-pdf {
+    display: none;
+  }
+
   /* PDF: "Salvar como PDF" do navegador */
   @media print {
     .so-tela,
-    ds-page-header [slot="actions"],
-    .indice {
+    .indice,
+    ds-footer,
+    header {
       display: none !important;
+    }
+    .so-pdf {
+      display: block;
+    }
+    .capa {
+      break-after: page;
+      padding-top: 30mm;
+    }
+    .capa__eyebrow {
+      color: var(--ds-color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .capa__titulo {
+      font-family: var(--ds-font-family-heading);
+      font-size: 32pt;
+      margin: 4mm 0 8mm;
+    }
+    .wrap {
+      width: 100%;
     }
     .section {
       padding-block: 0;
     }
     .acao {
       break-before: page;
+      margin-top: 0;
     }
-    .acao ds-image,
-    .acao img {
+    /* passo inteiro (título, texto e print) na mesma página */
+    .passo,
+    ds-steps li {
       break-inside: avoid;
+    }
+    .tela img {
+      max-height: 105mm;
+      width: auto;
+      max-width: 100%;
+      margin-inline: auto;
     }
   }
 }

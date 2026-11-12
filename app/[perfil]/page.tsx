@@ -10,8 +10,12 @@ import {
   DsSectionHeading,
   DsSteps,
 } from "@plataforma-xvia/ds-react/server";
+import ambiente from "@/conteudo/ambiente.json";
 import { perfilPorId, perfis } from "@/conteudo/perfis";
 import { Imprimir } from "../imprimir";
+import { Video } from "../video";
+
+const CMS = `${ambiente.url}/admin`;
 
 export const generateStaticParams = () =>
   perfis.filter((p) => p.situacao === "pronto").map((p) => ({ perfil: p.id }));
@@ -24,19 +28,37 @@ export default async function PaginaPerfil({ params }: { params: Promise<{ perfi
 
   return (
     <>
-      <div className="wrap topo">
+      <section className="capa so-pdf" aria-hidden="true">
+        <p className="capa__eyebrow">Guia da carta de serviço</p>
+        <h1 className="capa__titulo">Perfil {perfil.nome}</h1>
+        <p>{perfil.resumo}</p>
+        <p>
+          CMS ({ambiente.nome}): {CMS}
+        </p>
+        <p className="muted">
+          Secretaria-Executiva de Transformação Digital — SETDIG · gerado em {new Date().toLocaleDateString("pt-BR")}
+        </p>
+      </section>
+
+      <div className="wrap topo so-tela">
         <DsPageHeader
           heading={`Perfil ${perfil.nome}`}
           description={perfil.resumo}
           eyebrow="Guia da carta de serviço"
-          islands={{ actions: { node: <Imprimir /> } }}
         >
           <DsBreadcrumb slot="breadcrumb" items={JSON.stringify(trilha)} />
+          <div slot="actions">
+            <Imprimir perfil={perfil.id} />
+          </div>
         </DsPageHeader>
       </div>
 
       <div className="wrap section">
-        <div className="grid grid--2">
+        <DsAlert tone="info" heading={`CMS em ${ambiente.nome.toLowerCase()}`}>
+          Endereço: <a href={CMS}>{CMS}</a>
+        </DsAlert>
+
+        <div className="grid grid--2 resumo">
           <DsCard heading="O que você faz" headingLevel="2" icon="check" tone="success">
             <ul className="lista">{perfil.pode?.map((x) => <li key={x}>{x}</li>)}</ul>
           </DsCard>
@@ -66,17 +88,22 @@ export default async function PaginaPerfil({ params }: { params: Promise<{ perfi
               </DsAlert>
             )}
             {acao.aviso && <DsAlert tone="warning">{acao.aviso}</DsAlert>}
+            {acao.video && <Video src={acao.video} titulo={`${acao.titulo} (vídeo)`} />}
             <DsSteps headingLevel="3" items={JSON.stringify(acao.passos.map((p) => ({ title: p.titulo })))}>
               {acao.passos.map((p, n) => (
-                <div key={n} slot={`description-${n + 1}`}>
-                  <p>{p.texto}</p>
+                <div key={n} slot={`description-${n + 1}`} className="passo">
+                  <p>{p.texto.replace("{cms}", CMS)}</p>
+                  {p.onde && <p className="onde">Onde: {p.onde}</p>}
                   {p.print && existsSync(join(process.cwd(), "public/prints", perfil.id, p.print)) ? (
-                    <DsImage
-                      src={`/prints/${perfil.id}/${p.print}`}
-                      alt={`Tela do CMS: ${p.titulo}`}
-                      fit="contain"
-                      rounded
-                    />
+                    <div className="tela">
+                      <DsImage
+                        src={`/prints/${perfil.id}/${p.print}`}
+                        alt={`Tela do CMS: ${p.titulo}`}
+                        fit="contain"
+                        rounded
+                        loading="eager"
+                      />
+                    </div>
                   ) : acao.previsto ? null : (
                     <p className="sem-print so-tela">Print desta etapa em preparação.</p>
                   )}

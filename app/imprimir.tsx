@@ -1,11 +1,10 @@
-"use client";
-import { DsButton } from "@plataforma-xvia/ds-react";
+import { DsButton } from "@plataforma-xvia/ds-react/server";
 
-// ponytail: PDF pelo "Salvar como PDF" do navegador + CSS de impressão; biblioteca de PDF só se isso não bastar
-export function Imprimir() {
+// PDF pronto, gerado por scripts/pdf.mjs (margens certas, sem data nem endereço do navegador)
+export function Imprimir({ perfil }: { perfil: string }) {
   return (
-    <DsButton icon="download" appearance="outline" onClick={() => window.print()}>
-      Exportar PDF
+    <DsButton href={`/pdf/${perfil}.pdf`} download={`guia-carta-servico-${perfil}.pdf`} icon="download" appearance="outline">
+      Baixar PDF
     </DsButton>
   );
 }

@@ -3,6 +3,8 @@ export type Passo = {
   texto: string;
   /** arquivo em public/prints/<perfil>/; vazio enquanto o print não foi capturado */
   print?: string;
+  /** caminho no menu do CMS, ex.: "Carta de Serviços › Serviços" */
+  onde?: string;
 };
 
 export type Acao = {
@@ -14,6 +16,8 @@ export type Acao = {
   aviso?: string;
   /** funcionalidade ainda em desenvolvimento no CMS: aparece com selo e sem prints. Tire quando for entregue */
   previsto?: boolean;
+  /** vídeo da ação: arquivo em public/ ("/videos/x.webm") ou link do Drive (https://drive.google.com/file/d/<id>/...) */
+  video?: string;
 };
 
 export type Perfil = {

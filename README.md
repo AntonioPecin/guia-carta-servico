@@ -54,15 +54,17 @@ Print que ainda não existe aparece como "Print desta etapa em preparação" (s�
 
 ## Prints do CMS
 
-O script entra no CMS de homologação com a sua sessão e salva PNG em 2x.
+O script se conecta ao seu Edge logado no CMS e salva cada tela em PNG 2880x1800.
 
 ```bash
-npx playwright install chromium   # só na primeira vez
-npm run prints:login              # abre o navegador: entre no CMS; a sessão fica em .auth/ (fora do git)
-npm run prints                    # refaz o roteiro de scripts/capturar.mjs
+npm run prints:login   # abre o Edge com perfil próprio (.auth/edge, fora do git); entre no CMS e deixe aberto
+npm run prints         # refaz o roteiro de scripts/capturar.mjs
 ```
 
 O site é público: use só carta e usuário de teste, sem dado pessoal real.
+
+Passo a passo completo, problemas já resolvidos e como reaproveitar em outro projeto:
+[`docs/04-capturar-prints.md`](docs/04-capturar-prints.md).
 
 ## PDF
 
