@@ -1,0 +1,9 @@
+/node_modules
+/.next/
+/out/
+.vercel
+.env*
+*.tsbuildinfo
+next-env.d.ts
+# sessão do CMS usada pelo script de prints: nunca no git
+/.auth/

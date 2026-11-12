@@ -1,0 +1,113 @@
+/* Só layout e composição. Cor, fonte, raio e espaço vêm dos tokens do DS. */
+@layer ds.primitives, ds.semantic, ds.theme, app;
+
+@layer app {
+  body {
+    margin: 0;
+    background: var(--ds-color-surface);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+  }
+  a {
+    color: var(--ds-color-link);
+  }
+  a:hover {
+    color: var(--ds-color-link-hover);
+  }
+  :focus-visible {
+    outline: var(--ds-size-focus-ring-width) solid var(--ds-color-focus);
+    outline-offset: 2px;
+  }
+
+  .wrap {
+    width: min(72rem, 100% - 2 * var(--ds-spacing-16));
+    margin-inline: auto;
+  }
+  .section {
+    padding-block: var(--ds-spacing-48);
+  }
+  .topo {
+    padding-top: var(--ds-spacing-24);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-spacing-12);
+    color: var(--ds-color-brand-fg);
+    line-height: 1.1;
+  }
+  .brand small {
+    display: block;
+    opacity: 0.85;
+  }
+  .brand__divisor {
+    align-self: stretch;
+    width: 1px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .logo {
+    display: block;
+    height: 2.5rem;
+    width: auto;
+  }
+  .logo--rodape {
+    height: 3.5rem;
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--ds-spacing-24);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .grid--2 {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+
+  .lista {
+    margin: 0;
+    padding-left: var(--ds-spacing-24);
+  }
+  .lista li + li {
+    margin-top: var(--ds-spacing-8);
+  }
+
+  .indice {
+    margin-block: var(--ds-spacing-48);
+  }
+  .acao {
+    margin-top: var(--ds-spacing-48);
+    scroll-margin-top: var(--ds-spacing-16);
+  }
+  .acao ds-alert {
+    display: block;
+    margin-block: var(--ds-spacing-16);
+  }
+  .sem-print {
+    color: var(--ds-color-text-muted);
+    font-style: italic;
+  }
+
+  /* PDF: "Salvar como PDF" do navegador */
+  @media print {
+    .so-tela,
+    ds-page-header [slot="actions"],
+    .indice {
+      display: none !important;
+    }
+    .section {
+      padding-block: 0;
+    }
+    .acao {
+      break-before: page;
+    }
+    .acao ds-image,
+    .acao img {
+      break-inside: avoid;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "guia-carta-servico",
+      "runtimeExecutable": "npm.cmd",
+      "runtimeArgs": ["--prefix", "C:/Users/framos/Documents/SETDIG/2026/Projetos/guia-carta-servico", "run", "dev", "--", "--port", "3020"],
+      "port": 3020
+    }
+  ]
+}
