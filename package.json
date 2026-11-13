@@ -12,13 +12,19 @@
     "deploy": "next build && node scripts/pdf.mjs && vercel deploy out --prod --yes --project guia-carta-servico"
   },
   "dependencies": {
-    "@plataforma-xvia/ds-core": "0.14.4",
-    "@plataforma-xvia/ds-icons": "0.14.0",
-    "@plataforma-xvia/ds-react": "0.14.4",
-    "@plataforma-xvia/ds-tokens": "0.4.0",
+    "@plataforma-xvia/ds-core": "file:./vendor/plataforma-xvia-ds-core-0.14.4.tgz",
+    "@plataforma-xvia/ds-icons": "file:./vendor/plataforma-xvia-ds-icons-0.14.0.tgz",
+    "@plataforma-xvia/ds-react": "file:./vendor/plataforma-xvia-ds-react-0.14.4.tgz",
+    "@plataforma-xvia/ds-tokens": "file:./vendor/plataforma-xvia-ds-tokens-0.4.0.tgz",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"
+  },
+  "overrides": {
+    "@plataforma-xvia/ds-core": "file:./vendor/plataforma-xvia-ds-core-0.14.4.tgz",
+    "@plataforma-xvia/ds-icons": "file:./vendor/plataforma-xvia-ds-icons-0.14.0.tgz",
+    "@plataforma-xvia/ds-react": "file:./vendor/plataforma-xvia-ds-react-0.14.4.tgz",
+    "@plataforma-xvia/ds-tokens": "file:./vendor/plataforma-xvia-ds-tokens-0.4.0.tgz"
   },
   "devDependencies": {
     "@types/node": "^20",
