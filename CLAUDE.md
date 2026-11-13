@@ -57,7 +57,7 @@ transforma o roteiro numa jornada em `scripts/jornadas/<nome>.mjs` (`npm run jor
 
 **Jornadas (13/11/2026)**
 - Uma jornada por arquivo em `scripts/jornadas/`; o executor é `scripts/jornada.mjs`. Ações de tela só em `acoes()` de `comum.mjs`.
-- Carta de teste do Gerente: **2471** ("Teste Fabio Homolog", SAD). Pode enviar e cancelar à vontade.
+- Carta de teste do Gerente: **2471** ("Carta de teste do guia (Gerente)", SAD). Pode enviar e cancelar à vontade.
 - O `npm run prints` usa o perfil logado: `npm run prints -- gerente/` refaz só o Gerente (filtro em `perfil/arquivo`).
 
 **Scripts**

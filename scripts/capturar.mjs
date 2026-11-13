@@ -37,7 +37,7 @@ const semNome = async (page) => {
   });
 };
 // Gerente: envio e cancelamento de verdade na carta de teste (fica igual no fim da sequência)
-const CARTA_TESTE = "/admin/content/services/2471"; // "Teste Fabio Homolog" (SAD), carta de teste
+const CARTA_TESTE = "/admin/content/services/2471"; // "Carta de teste do guia (Gerente)" (SAD)
 const abrirEnvio = async (page) => {
   await page.getByRole("button", { name: "Enviar para aprovação" }).first().click();
   await page.waitForTimeout(1200);
