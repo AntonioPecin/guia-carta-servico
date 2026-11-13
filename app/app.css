@@ -108,6 +108,17 @@
   }
   .tela {
     margin-top: var(--ds-spacing-8);
+    border-left: 4px solid transparent;
+    padding-left: var(--ds-spacing-12);
+  }
+  .tela--acao {
+    border-left-color: #1351b4;
+  }
+  .tela--area {
+    border-left-color: #cee3ff;
+  }
+  .tela--atencao {
+    border-left-color: #d97706;
   }
   .video {
     margin: var(--ds-spacing-24) 0;

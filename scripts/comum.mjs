@@ -29,50 +29,109 @@ export async function abrirMenu(page) {
   });
 }
 
-/** contorna o elemento com borda vermelha + escurece o resto (spotlight): o olho vai direto no destaque */
-export async function destacar(locator) {
+/** Três linguagens visuais de destaque — cores do Design System de Governo de MS:
+ *   acao    → azul primário, badge numerada, spotlight escuro fora: botão/menu/link para clicar
+ *   area    → fundo azul translúcido + borda azul tracejada, sem spotlight: formulário/aba/seção
+ *   atencao → âmbar com ícone ⚠: aviso/restrição
+ * Quando o ROTEIRO informa `numero`, aparece a badge do passo colada no elemento (conecta com DsSteps). */
+const ESTILOS = {
+  acao: {
+    outline: "6px solid #1351B4",
+    "outline-offset": "-6px",
+    "border-radius": "8px",
+    "box-shadow": "0 0 0 9999px rgba(10,20,40,.55)",
+    "background-color": "",
+    badgeBg: "#1351B4",
+    badgeFg: "#FFFFFF",
+  },
+  area: {
+    outline: "3px dashed #1351B4",
+    "outline-offset": "-3px",
+    "border-radius": "8px",
+    "background-color": "rgba(19,81,180,.08)",
+    "box-shadow": "",
+    badgeBg: "#1351B4",
+    badgeFg: "#FFFFFF",
+  },
+  atencao: {
+    outline: "5px solid #D97706",
+    "outline-offset": "-5px",
+    "border-radius": "8px",
+    "box-shadow": "0 0 0 9999px rgba(40,25,10,.45)",
+    "background-color": "",
+    badgeBg: "#D97706",
+    badgeFg: "#FFFFFF",
+  },
+};
+
+export async function destacar(locator, { tipo = "acao", numero } = {}) {
+  const config = ESTILOS[tipo] ?? ESTILOS.acao;
+  const textoBadge =
+    tipo === "atencao" ? "!" : numero != null ? String(numero) : "";
   try {
     await locator.first().evaluate(
-      (el) => {
-        // um destaque por vez: tira o anterior
+      (el, { config, textoBadge }) => {
         document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
-          x.style.cssText = x.dataset.guiaEstiloAnterior ?? "";
+          x.setAttribute("style", x.dataset.guiaEstiloAnterior ?? "");
           x.removeAttribute("data-guia-destaque");
           x.removeAttribute("data-guia-estilo-anterior");
         });
+        document.querySelectorAll("[data-guia-badge]").forEach((x) => x.remove());
         el.dataset.guiaEstiloAnterior = el.getAttribute("style") ?? "";
         el.setAttribute("data-guia-destaque", "");
         el.scrollIntoView({ block: "center" });
-        // ponytail: cor de alerta fixa; o print é do CMS, fora do Design System.
-        // borda por dentro (item de menu fica em contêiner que corta a borda) + box-shadow enorme
-        // espalhando pra fora com rgba escuro = spotlight; eleva o elemento acima do overlay.
-        const estilo = {
-          outline: "6px solid #E60000",
-          "outline-offset": "-6px",
-          "border-radius": "8px",
-          "box-shadow": "0 0 0 9999px rgba(0,0,0,.55)",
+        const aplicar = {
+          outline: config.outline,
+          "outline-offset": config["outline-offset"],
+          "border-radius": config["border-radius"],
+          "box-shadow": config["box-shadow"],
+          "background-color": config["background-color"],
           position: getComputedStyle(el).position === "static" ? "relative" : "",
           "z-index": "9998",
         };
-        for (const [k, v] of Object.entries(estilo)) if (v) el.style.setProperty(k, v, "important");
+        for (const [k, v] of Object.entries(aplicar)) if (v) el.style.setProperty(k, v, "important");
+
+        if (textoBadge) {
+          const badge = document.createElement("div");
+          badge.setAttribute("data-guia-badge", "");
+          const r = el.getBoundingClientRect();
+          Object.assign(badge.style, {
+            position: "fixed",
+            left: `${Math.max(8, r.left - 20)}px`,
+            top: `${Math.max(8, r.top - 20)}px`,
+            width: "44px",
+            height: "44px",
+            "border-radius": "50%",
+            background: config.badgeBg,
+            color: config.badgeFg,
+            font: "700 22px/44px 'Open Sans',Arial,sans-serif",
+            "text-align": "center",
+            "box-shadow": "0 4px 14px rgba(0,0,0,.45)",
+            "z-index": "9999",
+            "pointer-events": "none",
+          });
+          badge.textContent = textoBadge;
+          document.body.appendChild(badge);
+        }
       },
-      undefined,
+      { config, textoBadge },
       { timeout: 5000 },
     );
-  } catch {
-    console.warn("    destaque não encontrado: print sai sem a borda (ajuste o seletor no ROTEIRO)");
+  } catch (e) {
+    console.warn(`    destaque não encontrado: ${e.message.split("\n")[0]} (ajuste o seletor no ROTEIRO)`);
   }
 }
 
-/** tira o destaque atual (vídeo: depois do clique) */
+/** tira o destaque atual e a badge numerada (vídeo: depois do clique) */
 export const limparDestaque = (page) =>
-  page.evaluate(() =>
+  page.evaluate(() => {
     document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
       x.setAttribute("style", x.dataset.guiaEstiloAnterior ?? "");
       x.removeAttribute("data-guia-destaque");
       x.removeAttribute("data-guia-estilo-anterior");
-    }),
-  );
+    });
+    document.querySelectorAll("[data-guia-badge]").forEach((x) => x.remove());
+  });
 
 /** legenda fixa no pé da tela, para o vídeo: "Passo 2 de 6 · Preencha o nome" */
 export const legenda = (page, texto) =>

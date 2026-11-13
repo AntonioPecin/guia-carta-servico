@@ -5,6 +5,13 @@ export type Passo = {
   print?: string;
   /** caminho no menu do CMS, ex.: "Carta de Serviços › Serviços" */
   onde?: string;
+  /** linguagem visual do destaque no print: "acao" = azul com número (botão, menu, link);
+   *  "area" = fundo azul claro (formulário, aba, seção); "atencao" = âmbar (aviso, restrição).
+   *  Default "acao". */
+  tipo?: "acao" | "area" | "atencao";
+  /** enquadramento do print: "tela" = 2880x1800 completa (default; use para contexto); "elemento" =
+   *  recorte no destaque + margem (botão específico); "secao" = recorte no contêiner pai (formulário). */
+  recorte?: "tela" | "elemento" | "secao";
 };
 
 export type Acao = {

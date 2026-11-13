@@ -12,14 +12,14 @@ const DESTINO = "public/videos/coordenador-criar-carta.webm";
 const pausa = (page, ms = 900) => page.waitForTimeout(ms);
 
 async function clicar(page, locator, ms = 800) {
-  await destacar(locator);
+  await destacar(locator, { tipo: "acao", numero: n });
   await pausa(page, ms);
   await locator.first().click();
   await limparDestaque(page);
   await pausa(page, 500);
 }
 async function escrever(page, locator, texto) {
-  await destacar(locator);
+  await destacar(locator, { tipo: "area", numero: n });
   await pausa(page, 500);
   await locator.first().click();
   await page.keyboard.type(texto, { delay: 35 });
@@ -43,7 +43,7 @@ async function opcao(page, rotulo) {
 }
 async function textoRico(page, rotulo, texto) {
   const area = campo(page, rotulo);
-  await destacar(area.locator(".tox-tinymce").first());
+  await destacar(area.locator(".tox-tinymce").first(), { tipo: "area", numero: n });
   await pausa(page, 500);
   await area.frameLocator("iframe").locator("body").click();
   await page.keyboard.type(texto, { delay: 25 });
@@ -87,7 +87,7 @@ await legenda(page, "Criar uma carta de serviço · perfil Coordenador");
 await pausa(page, 2000);
 
 await etapa(page, "Em Serviços, clique em + para começar uma carta", async () => {
-  await destacar(page.locator('a[href$="/services/+"]:visible'));
+  await destacar(page.locator('a[href$="/services/+"]:visible'), { tipo: "acao", numero: n });
   await pausa(page, 1500);
   // ponytail: navega direto; o clique no + do Directus trava o Playwright (navegação no meio do clique)
   await page.goto(`${CMS}/admin/content/services/+`, { waitUntil: "networkidle" });
@@ -140,7 +140,7 @@ await etapa(page, "Salve no ✓, no alto à direita", async () => {
     console.warn("avisos do CMS:", avisos.map((t) => t.trim()).filter(Boolean).slice(0, 6));
     throw e;
   });
-  await destacar(page.getByText(NOME, { exact: true }));
+  await destacar(page.getByText(NOME, { exact: true }), { tipo: "area", numero: n });
   await legenda(page, "Carta salva como rascunho. Agora avise o Gerente para enviar para aprovação");
   await pausa(page, 3500);
 });

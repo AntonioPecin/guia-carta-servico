@@ -95,7 +95,7 @@ export default async function PaginaPerfil({ params }: { params: Promise<{ perfi
                   <p>{p.texto.replace("{cms}", CMS)}</p>
                   {p.onde && <p className="onde">Onde: {p.onde}</p>}
                   {p.print && existsSync(join(process.cwd(), "public/prints", perfil.id, p.print)) ? (
-                    <div className="tela">
+                    <div className={`tela tela--${p.tipo ?? "acao"}`}>
                       <DsImage
                         src={`/prints/${perfil.id}/${p.print}`}
                         alt={`Tela do CMS: ${p.titulo}`}
