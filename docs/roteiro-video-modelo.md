@@ -1,6 +1,6 @@
 # Roteiro de vídeo — modelo
 
-**Quem preenche:** Antonio. **Quem grava:** a IA, a partir deste roteiro (`npm run video`).
+**Quem preenche:** Antonio. **Quem grava:** a IA, a partir deste roteiro (`npm run jornada -- <ação> [id] --video`).
 Copie este arquivo para `docs/roteiros/<perfil>-<ação>.md` e preencha. Não precisa escrever código.
 
 ## Como preencher
@@ -35,7 +35,7 @@ Copie este arquivo para `docs/roteiros/<perfil>-<ação>.md` e preencha. Não pr
 
 ## Exemplo preenchido: Coordenador · Criar uma carta
 
-Roteiro do vídeo `public/videos/coordenador-criar-carta.webm` (`scripts/video.mjs`).
+Roteiro do vídeo `public/videos/coordenador-criar-carta.webm` (`scripts/jornadas/criar.mjs`).
 
 | Campo | Valor |
 |---|---|

@@ -51,4 +51,14 @@ Nenhuma policy amplia onde a pessoa age.
 | Coordenador pré-visualiza | Ainda não existe; o Kauã vai fazer. No guia: `previsto: true` |
 | Coordenador vê o motivo da devolução | Previsto, não está no sistema |
 
+## O que o sistema mostra ao Gerente (homologação, 13/11/2026)
+
+| Quadro acima | Sistema |
+|---|---|
+| Gerente envia, cancela e reenvia | Envia e cancela pela carta (quadro no alto); o pedido aparece em Aprovações. Testado na carta 2471 |
+| Usuários e configuração só do Administrador | O Gerente abre o módulo Usuários e vê todos os usuários |
+| Categorias só do Administrador | O menu Categorias e Subcategorias aparece para o Gerente (edição não testada) |
+
+Achados de produto e UX (20 itens, com prints): doc "CMS - Carta de serviço", aba Fabio, seção Perfil Gerente.
+
 Detalhes da navegação: nota do vault `10-conhecimento/cms-carta-servico/navegar-no-cms-da-carta.md`.

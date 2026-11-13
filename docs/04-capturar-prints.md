@@ -7,7 +7,7 @@ evidência de qualquer sistema web, inclusive com login gov.br.
 |---|---|
 | [`scripts/comum.mjs`](../scripts/comum.mjs) | Endereço (lido de `conteudo/ambiente.json`), padrão de tela, conexão ao Edge, destaque, legenda, menu aberto |
 | [`scripts/capturar.mjs`](../scripts/capturar.mjs) | `--login` abre o Edge; sem flag, percorre o `ROTEIRO` e salva os prints |
-| [`scripts/video.mjs`](../scripts/video.mjs) | Grava uma jornada em vídeo, com legenda por passo |
+| [`scripts/jornada.mjs`](../scripts/jornada.mjs) + [`scripts/jornadas/`](../scripts/jornadas/) | Roda uma jornada pronta (criar, enviar, cancelar) e grava com `--video` |
 
 ## Resumo em comandos
 
@@ -15,7 +15,7 @@ evidência de qualquer sistema web, inclusive com login gov.br.
 npm install --save-dev playwright      # só a biblioteca; o navegador é o Edge do Windows
 npm run prints:login                   # abre o Edge com perfil próprio; você entra no sistema e deixa aberto
 npm run prints                         # prints (com destaque) e originais (sem destaque)
-npm run video                          # vídeo da jornada
+npm run jornada -- enviar 2471 --video  # jornada pronta, gravada
 ```
 
 ## Como funciona
@@ -63,7 +63,7 @@ usam `area`. Um destaque por vez (o anterior é limpo pela própria função).
 
 ## Para usar em outro projeto
 
-1. Copie `scripts/comum.mjs`, `scripts/capturar.mjs` (e `video.mjs`, se precisar) e os scripts do `package.json`.
+1. Copie `scripts/comum.mjs`, `scripts/capturar.mjs` (e `jornada.mjs` com `jornadas/`, se precisar) e os scripts do `package.json`.
    Ponha `.auth/` no `.gitignore`.
 2. Ajuste `ambiente.json` (endereço), `ESCONDER` (o que não pode aparecer) e o `ROTEIRO` (uma linha por tela).
 3. Ache os seletores navegando antes: pelo navegador do Claude (MCP) ou pelo DevTools. Prefira texto visível

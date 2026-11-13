@@ -50,8 +50,8 @@ Administrador). As regras que já deram problema estão no [`CLAUDE.md`](../CLAU
 - O Antonio copia o modelo de [`roteiro-video-modelo.md`](roteiro-video-modelo.md) para
   `docs/roteiros/<perfil>-<ação>.md` e preenche. Para descobrir o nome dos botões e campos, ele abre o CMS e
   copia o texto exatamente como aparece na tela.
-- A IA transforma o roteiro em script (`scripts/video.mjs` ou um novo `scripts/video-<perfil>-<ação>.mjs`) e grava:
-  `npm run video`.
+- A IA transforma o roteiro numa jornada (`scripts/jornadas/<ação>.mjs`, copiando uma que já existe) e grava:
+  `npm run jornada -- <ação> [id da carta] --video`.
 - Antonio e Fabio assistem. Ajuste vai no roteiro, e a IA regrava.
 - Conferir que o dado de teste sumiu do CMS (o script avisa).
 - Ligar o vídeo na ação: campo `video` em `conteudo/<perfil>.ts`.

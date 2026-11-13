@@ -5,7 +5,7 @@ Guia do CMS da carta de serviço **por perfil**: passo a passo com prints, víde
 
 **Antes de começar um perfil ou uma ação nova, leia [`docs/05-processo-guia-com-ia.md`](docs/05-processo-guia-com-ia.md).**
 O roteiro do vídeo é montado pelo Antonio em [`docs/roteiro-video-modelo.md`](docs/roteiro-video-modelo.md); a IA
-transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [`docs/04-capturar-prints.md`](docs/04-capturar-prints.md).
+transforma o roteiro numa jornada em `scripts/jornadas/<nome>.mjs` (`npm run jornada -- <nome> [id] --video`). Referência técnica dos scripts: [`docs/04-capturar-prints.md`](docs/04-capturar-prints.md).
 
 ## O processo (7 passos)
 
@@ -15,7 +15,7 @@ transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [
 | 2 | Navegar no CMS com a IA, com o perfil certo, e anotar divergências | navegador do Claude; `docs/02-perfis.md` |
 | 3 | Escrever as ações e os passos | `conteudo/<perfil>.ts` |
 | 4 | Roteiro dos prints e captura | `ROTEIRO` em `scripts/capturar.mjs`; `npm run prints` |
-| 5 | Roteiro do vídeo (Antonio) e gravação | `docs/roteiro-video-modelo.md` → `scripts/video.mjs`; `npm run video` |
+| 5 | Roteiro do vídeo (Antonio) e gravação | `docs/roteiro-video-modelo.md` → `scripts/jornadas/<nome>.mjs`; `npm run jornada -- <nome> [id] --video` |
 | 6 | PDF e conferência | `npm run build` e `npm run pdf` |
 | 7 | Validação do Fabio e publicação | `npm run deploy` |
 
@@ -54,6 +54,11 @@ transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [
 - Legenda no pé da tela por passo ("Passo N de M · …"); destaque só no que vai ser clicado e some depois.
 - Grava num contexto novo com a sessão copiada; no fim devolve os cookies ao Edge (o SSO renova a sessão).
 - Limpeza pela API, com o mesmo usuário; o script avisa se o dado de teste sobrar.
+
+**Jornadas (13/11/2026)**
+- Uma jornada por arquivo em `scripts/jornadas/`; o executor é `scripts/jornada.mjs`. Ações de tela só em `acoes()` de `comum.mjs`.
+- Carta de teste do Gerente: **2471** ("Teste Fabio Homolog", SAD). Pode enviar e cancelar à vontade.
+- O `npm run prints` usa o perfil logado: `npm run prints -- gerente/` refaz só o Gerente (filtro em `perfil/arquivo`).
 
 **Scripts**
 - Terminar com `process.exit(0)`: `browser.close()` numa conexão CDP fecha o Edge e o login.

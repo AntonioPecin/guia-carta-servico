@@ -8,7 +8,8 @@
     "prints:login": "node scripts/capturar.mjs --login",
     "prints": "node scripts/capturar.mjs",
     "pdf": "node scripts/pdf.mjs",
-    "video": "node scripts/video.mjs",
+    "jornada": "node scripts/jornada.mjs",
+    "video": "node scripts/jornada.mjs criar --video --limpar",
     "deploy": "next build && node scripts/pdf.mjs && vercel deploy out --prod --yes --project guia-carta-servico"
   },
   "dependencies": {

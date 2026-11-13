@@ -3,7 +3,7 @@
 Passo a passo do CMS da carta de serviço, **um guia por perfil**, com prints do sistema, vídeo e PDF.
 Feito com o [Design System MS](https://designsystem.digital.ms.gov.br).
 
-Piloto: **Coordenador**. Gerente, Aprovador Central (CGE) e Administrador seguem o mesmo molde.
+Prontos: **Coordenador** e **Gerente**. Aprovador Central (CGE) e Administrador seguem o mesmo molde.
 
 Item no TFS: [#1376742 — Planejar a ementa do treinamento da carta de serviço por perfil](https://tfs.sgi.ms.gov.br/tfs/Global/XVIA/_workitems/edit/1376742).
 Contexto completo em [`docs/`](docs/). **Para fazer o próximo perfil:** [`docs/05-processo-guia-com-ia.md`](docs/05-processo-guia-com-ia.md)
@@ -32,7 +32,8 @@ troca as versões em `package.json` (dependencies e overrides) e `rm -rf node_mo
 | `npm run dev` | Site local |
 | `npm run prints:login` | Abre o Edge com perfil próprio (`.auth/edge`, fora do git); você entra no CMS e deixa aberto |
 | `npm run prints` | Refaz todos os prints (`npm run prints -- busca` refaz só os que têm "busca" no nome) |
-| `npm run video` | Grava o vídeo "Criar uma carta" (cria uma carta de teste e a exclui no fim) |
+| `npm run jornada -- <nome> [id]` | Roda uma jornada pronta no CMS (ver **Jornadas**); `--video` grava, `--limpar` desfaz no fim |
+| `npm run video` | Grava o vídeo "Criar uma carta" do Coordenador (`jornada criar --video --limpar`) |
 | `npm run build` e `npm run pdf` | Site estático em `out/` e PDF de cada perfil em `out/pdf/` e `public/pdf/` |
 | `npm run deploy` | Build, PDF e envio para a Vercel |
 
@@ -44,7 +45,7 @@ troca as versões em `package.json` (dependencies e overrides) e `rm -rf node_mo
 | Mudar o texto de um perfil | `conteudo/<perfil>.ts` (ações e passos) |
 | Incluir um perfil | `conteudo/<perfil>.ts` + `conteudo/perfis.ts` (`situacao: "pronto"`) + telas no `ROTEIRO` |
 | Mudar uma tela ou o destaque do print | `ROTEIRO` em `scripts/capturar.mjs` |
-| Mudar o vídeo | `scripts/video.mjs` |
+| Mudar um vídeo ou jornada | `scripts/jornadas/<nome>.mjs` |
 | Mudar o visual | `app/app.css` (só tokens `--ds-*`) |
 
 ## Como editar e ampliar
@@ -78,6 +79,22 @@ Tudo o que o guia mostra vem de `conteudo/<perfil>.ts`. Cada ação é um bloco:
 | Ação nova | Copie um bloco, mude `id`, textos e prints |
 
 Print que ainda não existe aparece como "Print desta etapa em preparação" (só na tela, não no PDF).
+
+## Jornadas
+
+Jornada é um caminho pronto no CMS, com legenda por passo e destaque no que vai ser clicado. Serve para
+homologar, para gravar vídeo e para preparar dado de teste. Antes: `npm run prints:login` com o perfil certo.
+
+| Jornada | Perfil | Comando | Faz |
+|---|---|---|---|
+| `criar` | Coordenador ou Gerente | `npm run jornada -- criar` | Cria a carta "Teste do guia - não publicar" e mostra o id |
+| `enviar` | Gerente | `npm run jornada -- enviar 2471` | Envia a carta para aprovação (se já houver pedido aberto, cancela antes) |
+| `cancelar` | Gerente | `npm run jornada -- cancelar 2471` | Cancela o pedido aberto; a carta volta a rascunho |
+
+Encadear: `criar` mostra o id, e `enviar <id>` manda para aprovação. Com `--video`, a gravação vai para
+`public/videos/<perfil>-<jornada>.webm`. **Jornada nova:** copie um arquivo de `scripts/jornadas/` (o formato
+está no topo de `criar.mjs`) e use as ações de `acoes()` em `scripts/comum.mjs` (clicar, escrever, relacao,
+opcao, textoRico, mostrar, api).
 
 ## Prints
 

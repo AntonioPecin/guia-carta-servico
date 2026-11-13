@@ -6,7 +6,7 @@ import { createServer } from "node:http";
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { extname, join } from "node:path";
 
-const PERFIS = ["coordenador"]; // ponytail: lista à mão; ler de conteudo/perfis.ts quando houver mais perfis prontos
+const PERFIS = ["coordenador", "gerente"]; // ponytail: lista à mão; ler de conteudo/perfis.ts quando houver mais perfis prontos
 const TIPOS = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".svg": "image/svg+xml", ".webm": "video/webm", ".woff2": "font/woff2" };
 
 const servidor = createServer((req, res) => {

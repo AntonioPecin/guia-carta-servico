@@ -148,3 +148,60 @@ export const legenda = (page, texto) =>
     }
     el.textContent = texto;
   }, texto);
+
+/** Ações de tela usadas pelas jornadas (scripts/jornadas/*.mjs). `numero()` devolve o passo atual, para a badge. */
+export function acoes(page, numero = () => undefined) {
+  const pausa = (ms = 900) => page.waitForTimeout(ms);
+  const campo = (rotulo) => page.locator(".field").filter({ has: page.getByText(rotulo, { exact: true }) }).first();
+  async function clicar(locator, ms = 800) {
+    await destacar(locator, { tipo: "acao", numero: numero() });
+    await pausa(ms);
+    await locator.first().click();
+    await limparDestaque(page);
+    await pausa(500);
+  }
+  async function escrever(locator, texto) {
+    await destacar(locator, { tipo: "area", numero: numero() });
+    await pausa(500);
+    await locator.first().click();
+    await page.keyboard.type(texto, { delay: 35 });
+    await limparDestaque(page);
+    await pausa(400);
+  }
+  /** campo de relação (Categoria, Subcategoria, Órgão): abre a gaveta e escolhe o primeiro item */
+  async function relacao(rotulo) {
+    await clicar(campo(rotulo).locator(".interface .v-list-item, .interface button").first());
+    const gaveta = page.locator(".v-drawer").last();
+    await gaveta.waitFor();
+    await pausa(800);
+    await clicar(gaveta.locator("tbody tr, .table-row, .v-list-item").first(), 600);
+    if (await gaveta.isVisible()) await clicar(gaveta.locator('button:has([data-icon="check"])').first(), 500);
+  }
+  /** lista de opções (Tipo de Prazo, Tipo de Custo): abre e escolhe a primeira */
+  async function opcao(rotulo) {
+    await clicar(campo(rotulo).locator(".interface .v-input, .interface .v-select, .interface input").first());
+    await clicar(page.locator(".v-menu-content .v-list-item").first(), 500);
+  }
+  async function textoRico(rotulo, texto) {
+    const area = campo(rotulo);
+    await destacar(area.locator(".tox-tinymce").first(), { tipo: "area", numero: numero() });
+    await pausa(500);
+    await area.frameLocator("iframe").locator("body").click();
+    await page.keyboard.type(texto, { delay: 25 });
+    await limparDestaque(page);
+    await pausa(400);
+  }
+  /** mostra um elemento (aviso, resultado) sem clicar */
+  async function mostrar(locator, tipo = "area", ms = 2500) {
+    await destacar(locator, { tipo, numero: numero() });
+    await pausa(ms);
+    await limparDestaque(page);
+  }
+  /** GET/DELETE na API do CMS com a sessão da página */
+  const api = (caminho, metodo = "GET") =>
+    page.evaluate(async ([c, m]) => {
+      const r = await fetch(c, { method: m });
+      return r.status === 204 ? null : r.json();
+    }, [caminho, metodo]);
+  return { page, pausa, campo, clicar, escrever, relacao, opcao, textoRico, mostrar, api };
+}

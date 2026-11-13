@@ -1,14 +1,10 @@
 import { coordenador } from "./coordenador";
+import { gerente } from "./gerente";
 import type { Perfil } from "./tipos";
 
 export const perfis: Perfil[] = [
   coordenador,
-  {
-    id: "gerente",
-    nome: "Gerente",
-    resumo: "Responde pelas cartas do órgão: envia para aprovação, cuida das unidades e dos dados do órgão.",
-    situacao: "em-preparacao",
-  },
+  gerente,
   {
     id: "aprovador-central",
     nome: "Aprovador Central (CGE)",

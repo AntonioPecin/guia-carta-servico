@@ -27,6 +27,36 @@ const aba = (nome) => async (page) => {
   await page.getByText(nome, { exact: true }).first().click();
   await page.waitForTimeout(800);
 };
+// o site é público: troca o nome de quem está logado (ex.: coluna Solicitante) por um rótulo genérico
+const semNome = async (page) => {
+  await page.evaluate(async () => {
+    const eu = (await (await fetch("/users/me?fields=first_name,last_name")).json()).data;
+    const nome = `${eu.first_name} ${eu.last_name ?? ""}`.trim();
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (w.nextNode()) if (w.currentNode.nodeValue.includes(eu.first_name)) w.currentNode.nodeValue = w.currentNode.nodeValue.replace(nome, "Nome do Gerente").replace(eu.first_name, "Nome do Gerente");
+  });
+};
+// Gerente: envio e cancelamento de verdade na carta de teste (fica igual no fim da sequência)
+const CARTA_TESTE = "/admin/content/services/2471"; // "Teste Fabio Homolog" (SAD), carta de teste
+const abrirEnvio = async (page) => {
+  await page.getByRole("button", { name: "Enviar para aprovação" }).first().click();
+  await page.waitForTimeout(1200);
+  await page.locator("textarea").last().fill("Carta nova do serviço de teste do guia.");
+};
+const enviarTeste = async (page) => {
+  await abrirEnvio(page);
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
+  await page.getByText("Aguardando análise", { exact: false }).first().waitFor({ timeout: 15_000 });
+};
+const abrirCancelar = async (page) => {
+  await page.getByRole("button", { name: "Cancelar solicitação" }).first().click();
+  await page.waitForTimeout(1200);
+  await page.locator("textarea").last().fill("Envio de teste do guia, cancelado.");
+};
+const confirmarCancelar = async (page) => {
+  await page.getByRole("button", { name: "Cancelar solicitação" }).last().click();
+  await page.getByText("Carta pronta para enviar para aprovação").first().waitFor({ timeout: 15_000 });
+};
 
 // Uma linha por tela:
 //   arquivo   nome do PNG (o mesmo do campo `print` em conteudo/<perfil>.ts)
@@ -67,6 +97,19 @@ const ROTEIRO = [
   { perfil: "coordenador", arquivo: "mudar-2-versoes.png", url: CARTA, antes: aba("Main"), destaque: item("Rascunho"), tipo: "acao", numero: 2, recorte: "elemento" },
   { perfil: "coordenador", arquivo: "mudar-3-rascunho.png", url: `${CARTA}?version=draft`, destaque: (p) => p.getByText("Este rascunho está igual").locator("xpath=../.."), tipo: "atencao", numero: 3, recorte: "elemento" },
   { perfil: "coordenador", arquivo: "historico-1-aba.png", url: CARTA, antes: aba("Histórico"), destaque: texto("Histórico"), tipo: "area", numero: 1, recorte: "secao" },
+  // Gerente (13/11/2026): logar com perfil Gerente. A sequência envia a carta de teste 2471 e cancela no fim (pode repetir)
+  { perfil: "gerente", arquivo: "enviar-1-carta.png", url: CARTA_TESTE, destaque: (p) => p.getByRole("button", { name: "Enviar para aprovação" }).first().locator("xpath=ancestor::div[.//*[contains(text(),'pronta para enviar')]][1]"), tipo: "area", numero: 1, recorte: "tela" },
+  { perfil: "gerente", arquivo: "enviar-2-botao.png", url: CARTA_TESTE, destaque: (p) => p.getByRole("button", { name: "Enviar para aprovação" }), tipo: "acao", numero: 2, recorte: "elemento" },
+  { perfil: "gerente", arquivo: "enviar-3-justificativa.png", url: CARTA_TESTE, antes: abrirEnvio, destaque: (p) => p.locator("textarea").last(), tipo: "area", numero: 3, recorte: "tela" },
+  { perfil: "gerente", arquivo: "enviar-4-aguardando.png", url: CARTA_TESTE, antes: enviarTeste, destaque: (p) => p.getByText("Solicitação", { exact: true }).locator("xpath=../.."), tipo: "atencao", numero: 4, recorte: "elemento" },
+  { perfil: "gerente", arquivo: "acompanhar-1-fila.png", url: "/admin/aprovacoes", antes: semNome, destaque: (p) => p.locator("table").first(), tipo: "area", numero: 1, recorte: "tela" },
+  { perfil: "gerente", arquivo: "cancelar-1-botao.png", url: CARTA_TESTE, destaque: (p) => p.getByRole("button", { name: "Cancelar solicitação" }), tipo: "acao", numero: 1, recorte: "elemento" },
+  { perfil: "gerente", arquivo: "cancelar-2-motivo.png", url: CARTA_TESTE, antes: abrirCancelar, depois: confirmarCancelar, destaque: (p) => p.locator("textarea").last(), tipo: "area", numero: 2, recorte: "tela" },
+  { perfil: "gerente", arquivo: "mudar-1-versoes.png", url: CARTA, antes: aba("Main"), destaque: item("Rascunho"), tipo: "acao", numero: 1, recorte: "elemento" },
+  { perfil: "gerente", arquivo: "mudar-2-enviar.png", url: `${CARTA}?version=draft`, destaque: (p) => p.getByRole("button", { name: "Enviar para aprovação" }), tipo: "acao", numero: 2, recorte: "elemento" },
+  { perfil: "gerente", arquivo: "unidades-1-lista.png", url: "/admin/content/locations", destaque: item("Unidades"), tipo: "acao", numero: 1, recorte: "secao" },
+  { perfil: "gerente", arquivo: "unidades-2-abas.png", url: "/admin/content/locations/1745", destaque: texto("Identificação"), tipo: "area", numero: 2, recorte: "tela" },
+  { perfil: "gerente", arquivo: "unidades-3-orgao.png", url: "/admin/content/organizations/79", destaque: texto("Vínculos"), tipo: "area", numero: 3, recorte: "tela" },
 ];
 
 if (process.argv.includes("--login")) {
@@ -80,7 +123,7 @@ if (process.argv.includes("--login")) {
   process.exit(0);
 }
 
-const so = process.argv[2]; // npm run prints -- busca  → refaz só os arquivos com "busca" no nome
+const so = process.argv[2]; // npm run prints -- busca  → só os que têm "busca" no nome; -- gerente/ → só o perfil
 const browser = await conectar();
 const logado = browser.contexts()[0];
 const anonimo = await browser.newContext(); // sem sessão, só para a tela de login
@@ -108,7 +151,7 @@ async function calcularClip(locator, modo) {
   }
 }
 
-for (const p of ROTEIRO.filter((r) => !so || r.arquivo.includes(so))) {
+for (const p of ROTEIRO.filter((r) => !so || `${r.perfil}/${r.arquivo}`.includes(so))) {
   const page = await (p.semSessao ? anonimo : logado).newPage();
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Emulation.setDeviceMetricsOverride", TELA);
