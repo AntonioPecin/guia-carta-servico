@@ -16,6 +16,8 @@ Administrador). As regras que já deram problema estão no [`CLAUDE.md`](../CLAU
 ### 1. Preparar
 - O perfil de quem vai logar no CMS de homologação precisa ser o perfil do guia (ex.: Gerente da SAD). O Fabio
   troca no CMS, como fez para o Coordenador.
+- `npm install` instala sem token (DS vendorado em `vendor/`). Antonio e qualquer pessoa fora da
+  rede do governo clonam e rodam direto.
 - Abrir o Edge e entrar no CMS uma vez:
   ```bash
   npm run prints:login
@@ -34,9 +36,15 @@ Administrador). As regras que já deram problema estão no [`CLAUDE.md`](../CLAU
 - Função que o CMS ainda não tem: `previsto: true`.
 
 ### 4. Prints (IA)
-- Uma linha no `ROTEIRO` de `scripts/capturar.mjs` por tela, com o `destaque` do que a pessoa clica.
+- Uma linha no `ROTEIRO` de `scripts/capturar.mjs` por tela, com `destaque`, `tipo` (`acao` para
+  botão/menu, `area` para formulário, `atencao` para aviso), `numero` do passo (para a badge) e
+  `recorte` (`tela`, `elemento` ou `secao`). O mesmo `tipo` e `recorte` vão no passo em
+  `conteudo/<perfil>.ts`.
+- Botão específico → `recorte: "elemento"`; aba de formulário → `"secao"`; visão geral do sistema
+  → `"tela"`.
 - `npm run prints` (ou `npm run prints -- <parte-do-nome>` para refazer uma tela).
-- Conferir 2 ou 3 PNG: 2880x1800, sem dado pessoal, destaque no lugar. Originais ficam em `prints-originais/`.
+- Conferir 2 ou 3 PNG: sem dado pessoal, destaque no lugar, badge com o número do passo. Originais
+  ficam em `prints-originais/`.
 
 ### 5. Vídeo (Antonio monta o roteiro, IA grava)
 - O Antonio copia o modelo de [`roteiro-video-modelo.md`](roteiro-video-modelo.md) para

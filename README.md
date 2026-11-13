@@ -11,12 +11,19 @@ Contexto completo em [`docs/`](docs/). **Para fazer o próximo perfil:** [`docs/
 
 ## Rodar
 
-Precisa da rede do governo (ou VPN) e do token do GitLab MS no `~/.npmrc` para instalar o Design System.
-
 ```bash
 npm install
 npm run dev        # http://localhost:3000
 ```
+
+Os pacotes do Design System MS (`@plataforma-xvia/ds-*`) ficam **vendorados** em `vendor/*.tgz` e o
+`package.json` instala direto desses arquivos. Antonio (ou qualquer pessoa fora da rede do
+governo) clona o repo e roda `npm install` — sem token, sem VPN.
+
+**Atualizar o DS** (só Fabio, dentro da rede): `cd vendor && npm pack @plataforma-xvia/ds-core@<ver>
+@plataforma-xvia/ds-icons@<ver> @plataforma-xvia/ds-react@<ver> @plataforma-xvia/ds-tokens@<ver>`,
+troca as versões em `package.json` (dependencies e overrides) e `rm -rf node_modules package-lock.json
+&& npm install`.
 
 ## Comandos
 
@@ -74,10 +81,22 @@ Print que ainda não existe aparece como "Print desta etapa em preparação" (s�
 
 ## Prints
 
-- `public/prints/<perfil>/` — com o destaque vermelho, usados no site e no PDF.
+- `public/prints/<perfil>/` — print com destaque, usado no site e no PDF.
 - `prints-originais/<perfil>/` — **mesmo nome, sem marcação**: base para refazer o destaque ou ajustar a imagem.
 - Nome: `<ação>-<n>-<tela>.png` (ex.: `encontrar-2-busca.png`), igual ao campo `print` do conteúdo.
-- Todos em PNG 2880x1800. O site é público: só carta e usuário de teste, sem dado pessoal real.
+- O site é público: só carta e usuário de teste, sem dado pessoal real.
+
+**Linguagem visual do destaque** (3 tipos, cores do DS MS):
+
+| `tipo` | Uso | Visual |
+|---|---|---|
+| `acao` (default) | Botão, menu, link a clicar | Borda azul `#1351B4` + badge circular com o número do passo + sombra escurecendo o fora |
+| `area` | Formulário, aba, seção a preencher | Fundo azul claro tracejado, sem sombra |
+| `atencao` | Aviso ou restrição | Borda âmbar `#D97706` + ícone `!` |
+
+**Enquadramento** (`recorte` no passo): `tela` (default, 2880x1800), `elemento` (recorte do
+destaque + 120 px) ou `secao` (recorte do contêiner pai + 60 px). Botão específico vai bem com
+`elemento`; aba de formulário com `secao`; visão geral com `tela`.
 
 Passo a passo completo, problemas já resolvidos e como reaproveitar em outro projeto:
 [`docs/04-capturar-prints.md`](docs/04-capturar-prints.md).

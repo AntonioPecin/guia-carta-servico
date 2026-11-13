@@ -40,10 +40,14 @@ transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [
 - O Coordenador não tem pré-visualizar (o Kauã vai fazer): ação com `previsto: true`.
 
 **Prints**
-- Padrão único: tela 1440x900 em 2x → **PNG 2880x1800**.
+- Padrão: tela 1440x900 em 2x. Enquadramento por passo (`recorte`): `tela` (2880x1800 cheia),
+  `elemento` (só o destaque + 120 px) ou `secao` (contêiner pai + 60 px).
 - Cada tela sai duas vezes, com o mesmo nome `<ação>-<n>-<tela>.png`: `prints-originais/<perfil>/` (sem
   marcação) e `public/prints/<perfil>/` (com destaque).
-- Destaque vermelho por dentro do elemento, **um por vez**, na linha inteira do item de menu.
+- **Três linguagens de destaque** (campo `tipo` no passo de `conteudo/<perfil>.ts` e no `ROTEIRO`),
+  cores do DS MS: `acao` (azul `#1351B4` + badge com número do passo + sombra escurecendo o fora),
+  `area` (fundo azul claro tracejado, sem sombra), `atencao` (âmbar `#D97706` + ícone `!`). Um
+  destaque por vez; o número da badge casa com o `DsSteps` da página.
 - Captura pelo CDP (`Page.captureScreenshot`); o `page.screenshot` ignora a escala nessa conexão.
 
 **Vídeo**
@@ -65,8 +69,11 @@ transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [
 **Design System, PDF e publicação**
 - Componente do DS antes de markup próprio; ler a ficha em `https://designsystem.digital.ms.gov.br/llms/<tag>.md`.
   Server Component importa de `@plataforma-xvia/ds-react/server`. Cor, espaço e raio só por token `--ds-*`.
+- Pacotes DS ficam vendorados em `vendor/*.tgz`; `package.json` tem `dependencies` + `overrides` em
+  `file:./vendor/...tgz`, então `npm install` roda sem token do GitLab MS. Para atualizar: `cd vendor
+  && npm pack @plataforma-xvia/ds-<pkg>@<ver>` na rede, trocar versão em `package.json` e reinstalar.
 - PDF por `npm run pdf` (capa, sem data nem endereço do navegador, passo inteiro por página).
-- A Vercel não instala o DS (registry do GitLab MS): o deploy envia o `out/` pronto. `fetch failed` é rede do terminal.
+- A Vercel recebe o `out/` pronto (não faz build). `fetch failed` é rede do terminal.
 - Rodapé: "Secretaria-Executiva de Transformação Digital — SETDIG".
 
 ## Base de conhecimento no vault

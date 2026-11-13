@@ -38,13 +38,28 @@ npm run video                          # vídeo da jornada
 
 | Item | Valor |
 |---|---|
-| Tela | 1440x900, escala 2 → **PNG 2880x1800**, todas iguais |
+| Tela | 1440x900, escala 2 → **PNG 2880x1800** quando `recorte: "tela"` |
+| Enquadramento | `tela` (cheia, default), `elemento` (destaque + 120 px) ou `secao` (contêiner pai + 60 px). Vale no `ROTEIRO` e no passo (`recorte` em `conteudo/<perfil>.ts`) |
 | Pastas | `public/prints/<perfil>/` com destaque (site e PDF) · `prints-originais/<perfil>/` sem marcação, **mesmo nome** |
 | Nome | `<ação>-<n>-<tela>.png` (ex.: `encontrar-2-busca.png`), o mesmo do campo `print` do conteúdo |
-| Destaque | Borda vermelha por dentro do elemento, **uma por vez** |
 | Vídeo | `.webm` 1440x900, legenda "Passo N de M · …" no pé da tela |
 | Dados pessoais | Escondidos por CSS (`ESCONDER`: foto, contador de notificações). Conferir em cada sistema |
 | Ambiente | `conteudo/ambiente.json`: trocar `url` muda site, prints e vídeo |
+
+### Destaque: três linguagens visuais
+
+Cada passo escolhe o tipo em `tipo` (no conteúdo e no `ROTEIRO`). Cores do Design System MS,
+fixas nos scripts (o print é do CMS, fora do DS):
+
+| `tipo` | Para quê | Visual |
+|---|---|---|
+| `acao` (default) | Botão, item de menu, link a clicar | Borda azul `#1351B4` + badge circular com o número do passo + sombra escurecendo o fora (spotlight) |
+| `area` | Formulário, aba, seção a preencher | Fundo azul claro tracejado, sem sombra |
+| `atencao` | Aviso ou restrição | Borda âmbar `#D97706` + badge `!` |
+
+O número da badge casa com o número do passo no `DsSteps` da página — texto e imagem conectam
+visualmente. No vídeo, o tipo troca por ação: `clicar()` usa `acao`, `escrever()` e `textoRico()`
+usam `area`. Um destaque por vez (o anterior é limpo pela própria função).
 
 ## Para usar em outro projeto
 
@@ -61,7 +76,10 @@ Linha do roteiro:
 ```js
 { perfil: "coordenador", arquivo: "historico-1-aba.png", url: "/admin/content/services/1691",
   antes: aba("Histórico"),            // ação antes da foto
-  destaque: texto("Histórico") }      // o que contornar de vermelho
+  destaque: texto("Histórico"),       // elemento marcado no print
+  tipo: "area",                       // acao | area | atencao
+  numero: 1,                          // número da badge (casa com o passo no DsSteps)
+  recorte: "secao" }                  // tela | elemento | secao
 ```
 
 `npm run prints -- busca` refaz só os arquivos com "busca" no nome.
@@ -84,7 +102,9 @@ Linha do roteiro:
 | Foto e contador no print | Elementos do usuário logado | CSS em `ESCONDER` |
 | Busca "Sem resultados" / lista filtrada | O Directus guarda a busca da lista entre visitas | Limpar a busca antes (`buscar("")`) e depois do print |
 | Menu da esquerda sumiu | O Directus guarda o menu recolhido no `localStorage` (`nav-bar-collapsed`) | `addInitScript` que apaga a chave antes de abrir a página |
-| Destaque cortado no menu | Contêiner corta o que passa da borda | Borda por dentro (`outline-offset: -4px`) e na linha inteira do item (`.v-list-item`) |
+| Destaque cortado no menu | Contêiner corta o que passa da borda | Borda por dentro (`outline-offset` negativo) e na linha inteira do item (`.v-list-item`) |
+| Print "perdido" em A4 | Tela cheia num A4 fica pequena demais | `recorte: "elemento"` ou `"secao"` no passo para captura em close; `max-height: 160mm` no CSS de impressão |
+| Destaque parece marcação de teste | Único retângulo vermelho | 3 tipos (acao/area/atencao) com cores do DS MS e badge numerada |
 | Edge fecha no fim | `browser.close()` numa conexão CDP fecha o navegador | Terminar com `process.exit(0)` |
 | Edge deslogado depois do vídeo | O contexto da gravação passa pelo SSO e renova a sessão | Esperar o formulário depois do SSO e devolver os cookies ao Edge (`addCookies`) |
 | Carta não salva no vídeo | Campos obrigatórios e regra do CMS: cada canal marcado precisa de ao menos uma etapa | Preencher tudo, criar a etapa; depois de salvar o CMS volta para a lista |
