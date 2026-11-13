@@ -54,6 +54,7 @@ export const coordenador: Perfil = {
       id: "criar",
       titulo: "Criar uma carta",
       objetivo: "Cadastrar um serviço novo.",
+      video: "/videos/coordenador-criar-carta.webm",
       passos: [
         { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão + no alto da lista.", print: "" },
         {
@@ -64,7 +65,7 @@ export const coordenador: Perfil = {
         },
         {
           titulo: "Aba 2 — Etapa do Serviço",
-          texto: "Escolha o canal de prestação (presencial, online ou os dois) e escreva cada etapa na ordem em que a pessoa faz.",
+          texto: "Escolha o canal de prestação (presencial, online ou os dois) e escreva cada etapa na ordem em que a pessoa faz. Cada canal marcado precisa de ao menos uma etapa (botão Criar novo), senão o CMS não salva.",
           print: "criar-2-etapas.png",
           onde: "Serviços › + › aba Etapa do Serviço",
         },

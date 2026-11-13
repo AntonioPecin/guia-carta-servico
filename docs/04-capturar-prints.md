@@ -1,77 +1,93 @@
-# Capturar prints de um sistema com login (receita reutilizável)
+# Capturar prints e vídeo de um sistema com login (receita reutilizável)
 
-Como este repositório entra no CMS, navega e tira prints padronizados. Serve para guia, manual ou evidência de
-qualquer sistema web, inclusive com login gov.br. Script: [`scripts/capturar.mjs`](../scripts/capturar.mjs).
+Como este repositório entra no CMS, navega, tira prints padronizados e grava vídeo. Serve para guia, manual ou
+evidência de qualquer sistema web, inclusive com login gov.br.
 
-## Resumo em 4 comandos
+| Arquivo | Papel |
+|---|---|
+| [`scripts/comum.mjs`](../scripts/comum.mjs) | Endereço (lido de `conteudo/ambiente.json`), padrão de tela, conexão ao Edge, destaque, legenda, menu aberto |
+| [`scripts/capturar.mjs`](../scripts/capturar.mjs) | `--login` abre o Edge; sem flag, percorre o `ROTEIRO` e salva os prints |
+| [`scripts/video.mjs`](../scripts/video.mjs) | Grava uma jornada em vídeo, com legenda por passo |
+
+## Resumo em comandos
 
 ```bash
 npm install --save-dev playwright      # só a biblioteca; o navegador é o Edge do Windows
 npm run prints:login                   # abre o Edge com perfil próprio; você entra no sistema e deixa aberto
-npm run prints                         # o script se conecta ao Edge e salva os PNG
-```
-
-```json
-"prints:login": "node scripts/capturar.mjs --login",
-"prints": "node scripts/capturar.mjs"
+npm run prints                         # prints (com destaque) e originais (sem destaque)
+npm run video                          # vídeo da jornada
 ```
 
 ## Como funciona
 
 ```
 1. --login   Edge comum  --remote-debugging-port=9333  --user-data-dir=.auth/edge
-             (navegador normal: o gov.br aceita o login; o perfil guarda a sessão)
-2. pessoa entra no sistema na janela aberta (a IA nunca digita senha)
-3. capturar  chromium.connectOverCDP("http://127.0.0.1:9333")
+             (navegador normal: o gov.br aceita o login; o perfil guarda a sessão entre rodadas)
+2. a pessoa entra no sistema na janela aberta (a IA nunca digita senha)
+3. prints    chromium.connectOverCDP("http://127.0.0.1:9333")
              para cada tela do ROTEIRO:
-               nova aba → escala 1440x900 @2x → abre a URL → esconde dados pessoais
-               → ação opcional (clicar aba, abrir menu, digitar busca) → reaplica a escala
-               → Page.captureScreenshot (CDP) → public/prints/<perfil>/<arquivo>.png
-4. desconecta; o Edge continua aberto e logado para a próxima rodada
+               nova aba → menu aberto → escala 1440x900 @2x → abre a URL → esconde dados pessoais
+               → ação (clicar aba, abrir menu, buscar) → foto ORIGINAL → destaque → foto COM DESTAQUE
+4. vídeo     contexto novo com a sessão copiada + recordVideo 1440x900
+             para cada passo: legenda no pé → destaque só no que vai ser clicado → clique → tira o destaque
+             no fim: devolve os cookies ao Edge (o SSO renova a sessão) e limpa o dado de teste
+5. desconecta com process.exit (browser.close() fecharia o Edge e o login)
 ```
 
-## Padrão dos prints
+## Padrão
 
 | Item | Valor |
 |---|---|
 | Tela | 1440x900, escala 2 → **PNG 2880x1800**, todas iguais |
-| Dados pessoais | Escondidos por CSS antes do print (`ESCONDER`: foto, contador de notificações). Conferir cada sistema |
-| Nome do arquivo | `<ação>-<n>-<tela>.png`, o mesmo usado no campo `print` do conteúdo |
-| Tela de login | Contexto sem sessão (`semSessao: true`) |
+| Pastas | `public/prints/<perfil>/` com destaque (site e PDF) · `prints-originais/<perfil>/` sem marcação, **mesmo nome** |
+| Nome | `<ação>-<n>-<tela>.png` (ex.: `encontrar-2-busca.png`), o mesmo do campo `print` do conteúdo |
+| Destaque | Borda vermelha por dentro do elemento, **uma por vez** |
+| Vídeo | `.webm` 1440x900, legenda "Passo N de M · …" no pé da tela |
+| Dados pessoais | Escondidos por CSS (`ESCONDER`: foto, contador de notificações). Conferir em cada sistema |
+| Ambiente | `conteudo/ambiente.json`: trocar `url` muda site, prints e vídeo |
 
 ## Para usar em outro projeto
 
-1. Copie `scripts/capturar.mjs` e os dois scripts do `package.json`. Ponha `.auth/` no `.gitignore`.
-2. Troque no topo do script:
-   - `CMS`: endereço do sistema;
-   - `ESCONDER`: seletores do que não pode aparecer (foto, nome, e-mail, CPF);
-   - `ROTEIRO`: uma linha por tela.
+1. Copie `scripts/comum.mjs`, `scripts/capturar.mjs` (e `video.mjs`, se precisar) e os scripts do `package.json`.
+   Ponha `.auth/` no `.gitignore`.
+2. Ajuste `ambiente.json` (endereço), `ESCONDER` (o que não pode aparecer) e o `ROTEIRO` (uma linha por tela).
 3. Ache os seletores navegando antes: pelo navegador do Claude (MCP) ou pelo DevTools. Prefira texto visível
-   (`page.getByText("Histórico", { exact: true })`) a classe CSS, que muda entre versões.
-4. Rode `npm run prints:login`, entre no sistema, e depois `npm run prints`.
-5. Abra 2 ou 3 PNG e confira: tamanho, dado pessoal, tela certa.
+   (`page.getByText("Histórico", { exact: true })`) a classe CSS.
+4. `npm run prints:login`, entre no sistema, depois `npm run prints`.
+5. Abra 2 ou 3 PNG e confira: tamanho, dado pessoal, tela certa, destaque no lugar.
 
 Linha do roteiro:
 
 ```js
 { perfil: "coordenador", arquivo: "historico-1-aba.png", url: "/admin/content/services/1691",
-  antes: async (page) => { await page.getByText("Histórico", { exact: true }).first().click(); } }
+  antes: aba("Histórico"),            // ação antes da foto
+  destaque: texto("Histórico") }      // o que contornar de vermelho
 ```
+
+`npm run prints -- busca` refaz só os arquivos com "busca" no nome.
 
 ## Navegar antes de capturar (com a IA)
 
 - Logado no navegador do Claude, a IA lê o sistema **sem clicar em nada** quando há API. No Directus:
-  `/users/me?fields=role.name` (qual perfil está logado), `/roles` (funções), `/fields/<coleção>` (campos e abas).
-- Conferir o perfil antes de capturar: em 12/11/2026 o login estava como Administrador, e o print mostraria um
-  menu que o Coordenador não vê.
+  `/users/me?fields=role.name` (perfil logado), `/roles` (funções), `/fields/<coleção>` (campos e abas).
+- Conferir o perfil antes: em 12/11/2026 o login estava como Administrador, e o print mostraria um menu que o
+  Coordenador não vê.
 - O que difere da especificação vira nota de divergência (`docs/02-perfis.md`).
 
 ## Problemas já resolvidos
 
 | Problema | Causa | Solução |
 |---|---|---|
-| gov.br recusa o login | Navegador aberto pelo Playwright é marcado como automação | Abrir o Edge comum com porta de depuração e só conectar depois |
-| `browserType.launch: spawn UNKNOWN` | O Chromium baixado pelo Playwright não abre na máquina da SETDIG | Usar o Edge (`msedge.exe`) |
-| Print saiu em 1440x900, não 2x | Numa conexão CDP, o `page.screenshot` ignora a escala emulada | `Emulation.setDeviceMetricsOverride` reaplicado + `Page.captureScreenshot` |
-| Foto e contador no print | Elementos do usuário logado | CSS em `ESCONDER`; achar a classe pelo texto do elemento |
-| "Edge não está aberto" | O script de captura não achou a porta 9333 | Rodar `npm run prints:login` antes |
+| gov.br recusa o login | Navegador aberto pelo Playwright é marcado como automação | Edge comum com porta de depuração; conectar depois |
+| `spawn UNKNOWN` | O Chromium do Playwright não abre na máquina da SETDIG | Usar o Edge (`msedge.exe`) |
+| Print em 1440x900, não 2x | Numa conexão CDP, o `page.screenshot` ignora a escala | `Emulation.setDeviceMetricsOverride` reaplicado + `Page.captureScreenshot` |
+| Foto e contador no print | Elementos do usuário logado | CSS em `ESCONDER` |
+| Busca "Sem resultados" / lista filtrada | O Directus guarda a busca da lista entre visitas | Limpar a busca antes (`buscar("")`) e depois do print |
+| Menu da esquerda sumiu | O Directus guarda o menu recolhido no `localStorage` (`nav-bar-collapsed`) | `addInitScript` que apaga a chave antes de abrir a página |
+| Destaque cortado no menu | Contêiner corta o que passa da borda | Borda por dentro (`outline-offset: -4px`) e na linha inteira do item (`.v-list-item`) |
+| Edge fecha no fim | `browser.close()` numa conexão CDP fecha o navegador | Terminar com `process.exit(0)` |
+| Edge deslogado depois do vídeo | O contexto da gravação passa pelo SSO e renova a sessão | Esperar o formulário depois do SSO e devolver os cookies ao Edge (`addCookies`) |
+| Carta não salva no vídeo | Campos obrigatórios e regra do CMS: cada canal marcado precisa de ao menos uma etapa | Preencher tudo, criar a etapa; depois de salvar o CMS volta para a lista |
+| Clique no "+" trava o Playwright | Navegação no meio do clique | Destacar o "+" e navegar direto para `/services/+` |
+| Dado de teste no ambiente | O vídeo cria uma carta | Excluir pela API no fim, com o mesmo usuário; o script avisa se sobrar |
+| "Edge não está aberto" | Porta 9333 sem Edge | `npm run prints:login` |

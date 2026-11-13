@@ -85,15 +85,18 @@ for (const p of ROTEIRO.filter((r) => !so || r.arquivo.includes(so))) {
   await page.addStyleTag({ content: ESCONDER });
   await page.waitForTimeout(1000);
   if (p.antes) await p.antes(page);
-  if (p.destaque) await destacar(p.destaque(page));
   await cdp.send("Emulation.setDeviceMetricsOverride", TELA); // reaplica: navegação pode desfazer
   await page.waitForTimeout(300);
   // ponytail: captura pelo CDP; o page.screenshot do Playwright ignora a escala emulada numa conexão CDP
-  const { data } = await cdp.send("Page.captureScreenshot", { format: "png" });
-  writeFileSync(`public/prints/${p.perfil}/${p.arquivo}`, Buffer.from(data, "base64"));
+  const foto = async () => Buffer.from((await cdp.send("Page.captureScreenshot", { format: "png" })).data, "base64");
+  // original sem marcação, mesmo nome: base para refazer o destaque ou ajustar a imagem
+  mkdirSync(`prints-originais/${p.perfil}`, { recursive: true });
+  writeFileSync(`prints-originais/${p.perfil}/${p.arquivo}`, await foto());
+  if (p.destaque) await destacar(p.destaque(page));
+  writeFileSync(`public/prints/${p.perfil}/${p.arquivo}`, await foto());
   console.log(`ok  ${p.perfil}/${p.arquivo}`);
   if (p.depois) await p.depois(page);
   await page.close();
 }
 await anonimo.close();
-await browser.close(); // desconecta; o Edge continua aberto
+process.exit(0); // só desconecta: browser.close() fecharia o Edge e o login

@@ -34,6 +34,12 @@ export async function destacar(locator) {
   try {
     await locator.first().evaluate(
       (el) => {
+        // um destaque por vez: tira o anterior
+        document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
+          x.style.outline = "";
+          x.removeAttribute("data-guia-destaque");
+        });
+        el.setAttribute("data-guia-destaque", "");
         el.scrollIntoView({ block: "center" });
         // ponytail: cor de alerta fixa; o print é do CMS, fora do Design System
         // borda por dentro: item de menu fica dentro de contêiner que corta o que passa da borda
@@ -48,3 +54,28 @@ export async function destacar(locator) {
     console.warn("    destaque não encontrado: print sai sem a borda (ajuste o seletor no ROTEIRO)");
   }
 }
+
+/** tira o destaque atual (vídeo: depois do clique) */
+export const limparDestaque = (page) =>
+  page.evaluate(() =>
+    document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
+      x.style.outline = "";
+      x.removeAttribute("data-guia-destaque");
+    }),
+  );
+
+/** legenda fixa no pé da tela, para o vídeo: "Passo 2 de 6 · Preencha o nome" */
+export const legenda = (page, texto) =>
+  page.evaluate((texto) => {
+    let el = document.getElementById("guia-legenda");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "guia-legenda";
+      el.style.cssText =
+        "position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99999;max-width:80%;" +
+        "padding:12px 22px;border-radius:999px;background:rgba(15,23,42,.88);color:#fff;" +
+        "font:600 18px/1.3 'Open Sans',Arial,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.25);pointer-events:none";
+      document.body.appendChild(el);
+    }
+    el.textContent = texto;
+  }, texto);
