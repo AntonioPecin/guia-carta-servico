@@ -119,7 +119,7 @@ export const gerente: Perfil = {
       id: "mudar-publicada",
       titulo: "Mudar uma carta publicada",
       objetivo: "Corrigir uma carta que já está no portal, sem tirar a versão atual do ar.",
-      aviso: "A carta publicada não se edita direto. A mudança é feita na versão Rascunho e só vai ao portal depois de aprovada. Não use o botão Inativar: ele tira a carta do portal.",
+      aviso: "A carta publicada não se edita direto. A mudança é feita na versão Rascunho e só vai ao portal depois de aprovada. O botão Inativar não serve para mudar: ele pede ao Aprovador Central para tirar a carta do portal.",
       passos: [
         {
           titulo: "Abra a versão Rascunho",
