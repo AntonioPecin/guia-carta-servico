@@ -21,40 +21,6 @@ export const coordenador: Perfil = {
   ],
   acoes: [
     {
-      id: "entrar",
-      titulo: "Entrar no CMS",
-      objetivo: "Abrir o gerenciador de cartas com o seu usuário.",
-      passos: [
-        { titulo: "Abra o endereço do CMS", texto: "No navegador, acesse {cms}.", print: "" },
-        { titulo: "Clique em Entrar com SSO", texto: "Entre com o seu acesso. Na primeira vez, a SETDIG libera o seu perfil e o seu órgão.", print: "entrar-1-login.png", onde: "Tela de login", tipo: "acao", recorte: "elemento" },
-        {
-          titulo: "Conheça o menu",
-          texto: "À esquerda fica a área Carta de Serviço. Você vai usar mais o item Serviços, que lista as cartas do seu órgão.",
-          print: "entrar-2-menu.png",
-          onde: "Menu à esquerda › Carta de Serviços",
-          tipo: "area",
-          recorte: "secao",
-        },
-      ],
-    },
-    {
-      id: "encontrar",
-      titulo: "Encontrar uma carta",
-      objetivo: "Achar a carta do seu órgão na lista.",
-      passos: [
-        {
-          titulo: "Abra Serviços",
-          texto: "A lista mostra nome, categoria, órgão e situação (Ativo ou Inativo) de cada carta do seu órgão.",
-          print: "encontrar-1-lista.png",
-          onde: "Carta de Serviços › Serviços",
-          tipo: "acao",
-          recorte: "secao",
-        },
-        { titulo: "Busque pelo nome", texto: "Clique na lupa, no alto da lista, e digite parte do nome do serviço.", print: "encontrar-2-busca.png", onde: "Serviços › lupa no alto da lista", tipo: "acao", recorte: "elemento" },
-        { titulo: "Abra a carta", texto: "Clique na linha da carta. Ela abre na aba Descrição do Serviço.", print: "encontrar-3-carta.png", onde: "Serviços › carta escolhida", tipo: "area", recorte: "tela" },
-      ],
-    },
-    {
       id: "criar",
       titulo: "Criar uma carta",
       objetivo: "Cadastrar um serviço novo.",
@@ -93,6 +59,40 @@ export const coordenador: Perfil = {
           tipo: "acao",
           recorte: "elemento",
         },
+      ],
+    },
+    {
+      id: "entrar",
+      titulo: "Entrar no CMS",
+      objetivo: "Abrir o gerenciador de cartas com o seu usuário.",
+      passos: [
+        { titulo: "Abra o endereço do CMS", texto: "No navegador, acesse {cms}.", print: "" },
+        { titulo: "Clique em Entrar com SSO", texto: "Entre com o seu acesso. Na primeira vez, a SETDIG libera o seu perfil e o seu órgão.", print: "entrar-1-login.png", onde: "Tela de login", tipo: "acao", recorte: "elemento" },
+        {
+          titulo: "Conheça o menu",
+          texto: "À esquerda fica a área Carta de Serviço. Você vai usar mais o item Serviços, que lista as cartas do seu órgão.",
+          print: "entrar-2-menu.png",
+          onde: "Menu à esquerda › Carta de Serviços",
+          tipo: "area",
+          recorte: "secao",
+        },
+      ],
+    },
+    {
+      id: "encontrar",
+      titulo: "Encontrar uma carta",
+      objetivo: "Achar a carta do seu órgão na lista.",
+      passos: [
+        {
+          titulo: "Abra Serviços",
+          texto: "A lista mostra nome, categoria, órgão e situação (Ativo ou Inativo) de cada carta do seu órgão.",
+          print: "encontrar-1-lista.png",
+          onde: "Carta de Serviços › Serviços",
+          tipo: "acao",
+          recorte: "secao",
+        },
+        { titulo: "Busque pelo nome", texto: "Clique na lupa, no alto da lista, e digite parte do nome do serviço.", print: "encontrar-2-busca.png", onde: "Serviços › lupa no alto da lista", tipo: "acao", recorte: "elemento" },
+        { titulo: "Abra a carta", texto: "Clique na linha da carta. Ela abre na aba Descrição do Serviço.", print: "encontrar-3-carta.png", onde: "Serviços › carta escolhida", tipo: "area", recorte: "tela" },
       ],
     },
     {

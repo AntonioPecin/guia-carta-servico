@@ -17,6 +17,9 @@ import { Video } from "../video";
 
 const CMS = `${ambiente.url}/admin`;
 
+// endereço que não é perfil (ex.: /favicon.ico) vira 404, em vez de erro no npm run dev com output: export
+export const dynamicParams = false;
+
 export const generateStaticParams = () =>
   perfis.filter((p) => p.situacao === "pronto").map((p) => ({ perfil: p.id }));
 

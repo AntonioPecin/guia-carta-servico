@@ -40,7 +40,7 @@ export default {
       legenda: "Pronto: a carta fica Aguardando análise, com o número do pedido",
       fazer: async (a) => {
         await a.page.getByText("Aguardando análise", { exact: false }).first().waitFor({ timeout: 20_000 });
-        await a.mostrar(a.page.getByText("Solicitação", { exact: true }).locator("xpath=../.."), "atencao", 3000);
+        await a.mostrar(a.page.getByText("Ver no módulo Aprovações").first().locator("xpath=ancestor::div[.//*[contains(text(),'Enquanto estiver aberta')]][1]"), "atencao", 3000);
       },
     },
   ],
