@@ -29,23 +29,32 @@ export async function abrirMenu(page) {
   });
 }
 
-/** contorna o elemento com borda vermelha: mostra no print onde clicar */
+/** contorna o elemento com borda vermelha + escurece o resto (spotlight): o olho vai direto no destaque */
 export async function destacar(locator) {
   try {
     await locator.first().evaluate(
       (el) => {
         // um destaque por vez: tira o anterior
         document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
-          x.style.outline = "";
+          x.style.cssText = x.dataset.guiaEstiloAnterior ?? "";
           x.removeAttribute("data-guia-destaque");
+          x.removeAttribute("data-guia-estilo-anterior");
         });
+        el.dataset.guiaEstiloAnterior = el.getAttribute("style") ?? "";
         el.setAttribute("data-guia-destaque", "");
         el.scrollIntoView({ block: "center" });
-        // ponytail: cor de alerta fixa; o print é do CMS, fora do Design System
-        // borda por dentro: item de menu fica dentro de contêiner que corta o que passa da borda
-        el.style.outline = "4px solid #E60000";
-        el.style.outlineOffset = "-4px";
-        el.style.borderRadius = "6px";
+        // ponytail: cor de alerta fixa; o print é do CMS, fora do Design System.
+        // borda por dentro (item de menu fica em contêiner que corta a borda) + box-shadow enorme
+        // espalhando pra fora com rgba escuro = spotlight; eleva o elemento acima do overlay.
+        const estilo = {
+          outline: "6px solid #E60000",
+          "outline-offset": "-6px",
+          "border-radius": "8px",
+          "box-shadow": "0 0 0 9999px rgba(0,0,0,.55)",
+          position: getComputedStyle(el).position === "static" ? "relative" : "",
+          "z-index": "9998",
+        };
+        for (const [k, v] of Object.entries(estilo)) if (v) el.style.setProperty(k, v, "important");
       },
       undefined,
       { timeout: 5000 },
@@ -59,8 +68,9 @@ export async function destacar(locator) {
 export const limparDestaque = (page) =>
   page.evaluate(() =>
     document.querySelectorAll("[data-guia-destaque]").forEach((x) => {
-      x.style.outline = "";
+      x.setAttribute("style", x.dataset.guiaEstiloAnterior ?? "");
       x.removeAttribute("data-guia-destaque");
+      x.removeAttribute("data-guia-estilo-anterior");
     }),
   );
 

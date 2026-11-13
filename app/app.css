@@ -173,10 +173,12 @@
       break-inside: avoid;
     }
     .tela img {
-      max-height: 105mm;
+      max-height: 160mm;
       width: auto;
       max-width: 100%;
       margin-inline: auto;
+      border: 1pt solid var(--ds-color-border, #c8c8c8);
+      border-radius: 4pt;
     }
   }
 }

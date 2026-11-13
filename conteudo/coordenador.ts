@@ -56,7 +56,7 @@ export const coordenador: Perfil = {
       objetivo: "Cadastrar um serviço novo.",
       video: "/videos/coordenador-criar-carta.webm",
       passos: [
-        { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão + no alto da lista.", print: "" },
+        { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão + no alto da lista.", print: "criar-0-novo.png", onde: "Serviços › botão + no alto" },
         {
           titulo: "Aba 1 — Descrição do Serviço",
           texto: "Preencha nome do serviço (3 a 5 palavras, começando por verbo), categoria e subcategoria, órgão, o que é o serviço, documentos necessários e quem pode utilizar. Público específico, nome popular, saiba mais e palavras-chave ajudam o cidadão a achar o serviço.",
@@ -78,7 +78,8 @@ export const coordenador: Perfil = {
         {
           titulo: "Salve",
           texto: "Clique no botão de confirmar (✓), no alto à direita. Os campos com asterisco são obrigatórios. Depois, avise o Gerente para enviar a carta para aprovação.",
-          print: "",
+          print: "criar-4-salvar.png",
+          onde: "Carta nova › botão ✓ no alto à direita",
         },
       ],
     },

@@ -50,9 +50,12 @@ const ROTEIRO = [
     destaque: (p) => p.locator(".search-input"),
   },
   { perfil: "coordenador", arquivo: "encontrar-3-carta.png", url: CARTA, destaque: texto("Descrição do Serviço") },
+  // botão + (criar): apontar sem clicar — clicar trava o Playwright (ver CLAUDE.md)
+  { perfil: "coordenador", arquivo: "criar-0-novo.png", url: "/admin/content/services", antes: buscar(""), destaque: (p) => p.locator(".action-create, [data-test='create-item']").first() },
   { perfil: "coordenador", arquivo: "criar-1-descricao.png", url: "/admin/content/services/+", destaque: texto("Descrição do Serviço") },
   { perfil: "coordenador", arquivo: "criar-2-etapas.png", url: "/admin/content/services/+", antes: aba("Etapa do Serviço"), destaque: texto("Etapa do Serviço") },
   { perfil: "coordenador", arquivo: "criar-3-detalhes.png", url: "/admin/content/services/+", antes: aba("Detalhes do Serviço"), destaque: texto("Detalhes do Serviço") },
+  { perfil: "coordenador", arquivo: "criar-4-salvar.png", url: "/admin/content/services/+", destaque: (p) => p.locator(".action-save, button[aria-label*='Salvar' i], button[data-test='save-button']").first() },
   { perfil: "coordenador", arquivo: "mudar-1-aviso.png", url: CARTA, destaque: (p) => p.getByText("VISÍVEL NO PORTAL").locator("xpath=../..") },
   { perfil: "coordenador", arquivo: "mudar-2-versoes.png", url: CARTA, antes: aba("Main"), destaque: item("Rascunho") },
   { perfil: "coordenador", arquivo: "mudar-3-rascunho.png", url: `${CARTA}?version=draft`, destaque: (p) => p.getByText("Este rascunho está igual").locator("xpath=../..") },
