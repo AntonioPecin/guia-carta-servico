@@ -35,7 +35,7 @@ Copie este arquivo para `docs/roteiros/<perfil>-<ação>.md` e preencha. Não pr
 
 ## Exemplo preenchido: Coordenador · Criar uma carta
 
-Roteiro do vídeo `public/videos/coordenador-criar-carta.webm` (`scripts/video.mjs`).
+Roteiro do vídeo `public/videos/coordenador-criar-carta.mp4` (`scripts/video.mjs`); narração em [`roteiros/coordenador-criar-carta-narracao.md`](roteiros/coordenador-criar-carta-narracao.md).
 
 | Campo | Valor |
 |---|---|

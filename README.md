@@ -49,7 +49,7 @@ Tudo o que o guia mostra vem de `conteudo/<perfil>.ts`. Cada ação é um bloco:
   id: "criar",                               // vira a âncora #criar
   titulo: "Criar uma carta",
   objetivo: "Cadastrar um serviço novo.",
-  video: "/videos/coordenador-criar-carta.webm", // ou link do Drive: https://drive.google.com/file/d/<id>/view
+  video: "/videos/coordenador-criar-carta.mp4", // ou link do Drive: https://drive.google.com/file/d/<id>/view
   previsto: true,                            // função ainda em desenvolvimento no CMS: selo, sem prints
   aviso: "Texto de atenção opcional.",
   passos: [

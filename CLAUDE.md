@@ -48,6 +48,11 @@ transforma o roteiro em `scripts/video.mjs`. Referência técnica dos scripts: [
 
 **Vídeo**
 - Legenda no pé da tela por passo ("Passo N de M · …"); destaque só no que vai ser clicado e some depois.
+- Destaque do vídeo é `destacarVideo`: moldura **por fora** do campo, numa camada própria, que sobe do
+  `<input>`/rótulo até a caixa visível (o contorno por dentro cortava o texto). Os prints seguem com `destacar`.
+- A legenda nunca fica na frente do campo destacado: se for cobrir, sobe para o alto da tela.
+- `npm run video` grava cru, sem som, em `gravacoes/` (fora do git). Em `public/videos/` fica só o `.mp4` final,
+  com a narração (texto em `docs/roteiros/<perfil>-<ação>-narracao.md`, voz gerada na Fish Audio).
 - Grava num contexto novo com a sessão copiada; no fim devolve os cookies ao Edge (o SSO renova a sessão).
 - Limpeza pela API, com o mesmo usuário; o script avisa se o dado de teste sobrar.
 

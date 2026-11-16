@@ -54,7 +54,7 @@ export const coordenador: Perfil = {
       id: "criar",
       titulo: "Criar uma carta",
       objetivo: "Cadastrar um serviço novo.",
-      video: "/videos/coordenador-criar-carta.webm",
+      video: "/videos/coordenador-criar-carta.mp4",
       passos: [
         { titulo: "Comece uma carta nova", texto: "Em Serviços, clique no botão + no alto da lista.", print: "criar-0-novo.png", onde: "Serviços › botão + no alto" },
         {

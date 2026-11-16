@@ -1,14 +1,15 @@
 // Vídeo: Coordenador criando uma carta de serviço (dados fictícios). No fim, a carta de teste é EXCLUÍDA.
 //   npm run prints:login   (uma vez; entre no CMS)
-//   npm run video          → public/videos/coordenador-criar-carta.webm
-// Grava num contexto novo com a sessão copiada do Edge logado. Cada etapa tem legenda no pé da tela e
-// um destaque só no que vai ser clicado (some depois do clique).
+//   npm run video          → gravacoes/coordenador-criar-carta.webm (cru, sem som; o site usa o .mp4 narrado em public/videos)
+// Grava num contexto novo com a sessão copiada do Edge logado. Cada etapa tem legenda no pé da tela (sobe
+// para o alto se for cobrir o campo) e uma moldura por fora só no que vai ser clicado (some depois do clique).
 import { copyFileSync, mkdirSync, rmSync } from "node:fs";
-import { CMS, ESCONDER, abrirMenu, conectar, destacar, legenda, limparDestaque } from "./comum.mjs";
+// no vídeo a moldura fica por fora do campo (destacarVideo); os prints seguem com o destacar de sempre
+import { CMS, ESCONDER, abrirMenu, conectar, destacarVideo as destacar, legenda, limparDestaque } from "./comum.mjs";
 
 const NOME = "Teste do guia - não publicar";
 const PASTA = ".auth/video";
-const DESTINO = "public/videos/coordenador-criar-carta.webm";
+const DESTINO = "gravacoes/coordenador-criar-carta.webm";
 const pausa = (page, ms = 900) => page.waitForTimeout(ms);
 
 async function clicar(page, locator, ms = 800) {
@@ -159,7 +160,7 @@ const video = page.video();
 // o SSO renova a sessão nesta janela e a do Edge expira: devolve os cookies novos ao Edge
 await browser.contexts()[0].addCookies(await ctx.cookies());
 await ctx.close(); // fecha só o contexto da gravação; o Edge continua aberto e logado
-mkdirSync("public/videos", { recursive: true });
+mkdirSync("gravacoes", { recursive: true });
 copyFileSync(await video.path(), DESTINO);
 console.log(`vídeo: ${DESTINO}`);
 console.log(sobrou ? `ATENÇÃO: a carta "${NOME}" ficou no CMS. Exclua em ${CMS}/admin/content/services` : "nenhuma carta de teste ficou no CMS");

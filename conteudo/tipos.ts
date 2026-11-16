@@ -16,7 +16,7 @@ export type Acao = {
   aviso?: string;
   /** funcionalidade ainda em desenvolvimento no CMS: aparece com selo e sem prints. Tire quando for entregue */
   previsto?: boolean;
-  /** vídeo da ação: arquivo em public/ ("/videos/x.webm") ou link do Drive (https://drive.google.com/file/d/<id>/...) */
+  /** vídeo da ação: arquivo em public/ ("/videos/x.mp4") ou link do Drive (https://drive.google.com/file/d/<id>/...) */
   video?: string;
 };
 

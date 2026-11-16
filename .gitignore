@@ -7,3 +7,5 @@
 next-env.d.ts
 # sessão do CMS usada pelo script de prints: nunca no git
 /.auth/
+# gravação crua do npm run video (sem som); o site usa o .mp4 narrado em public/videos
+/gravacoes/
